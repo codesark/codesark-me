@@ -185,7 +185,7 @@ jobs:
                 image: "${IMAGE_WITH_TAG}"
                 container_name: codesark
                 ports:
-                  - "8080:3000"
+                  - "8081:3000"
                 environment:
                   - NODE_ENV=production
                 env_file:
