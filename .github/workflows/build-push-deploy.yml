@@ -2,14 +2,14 @@ name: Build + Push + Deploy
 
 env:
   DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
-  DOCKER_REGISTRY_IMAGE: ${{ secrets.DOCKER_REGISTRY_NAME }}/codesark/codesark-portfolio-next
+  DOCKER_REGISTRY_IMAGE: ${{ secrets.DOCKER_REGISTRY_NAME }}/codesark/codesark
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-      - dev
+      # - dev
     tags:
       - v*
 
@@ -23,7 +23,7 @@ jobs:
           - linux/amd64
           # - linux/arm/v6
           # - linux/arm/v7
-          - linux/arm64
+          #  - linux/arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,6 +53,10 @@ jobs:
           registry: ${{ env.DOCKER_REGISTRY_NAME }}
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.DEPLOYMENT_ENV_VARS }}" > .env
+
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v5
@@ -63,13 +67,15 @@ jobs:
           outputs: type=image,name=${{ env.DOCKER_REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=${{ github.workflow }}-${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ matrix.platform }}
+          secret-files: |
+            "env_file=.env"
       - name: Export digest
         run: |
           mkdir -p /tmp/digests
           digest="${{ steps.build.outputs.digest }}"
           touch "/tmp/digests/${digest#sha256:}"
       - name: Upload digest
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: digests
           path: /tmp/digests/*
@@ -86,7 +92,7 @@ jobs:
       - build
     steps:
       - name: Download digests
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: digests
           path: /tmp/digests
@@ -121,26 +127,75 @@ jobs:
       - build
       - push
     runs-on: ubuntu-latest
-    # only run if branch is main or commit have "release" tag
-    if: ${{ needs.build.outputs.branch == 'main' || contains(github.event.head_commit.message, 'release') }}
+    if: ${{ needs.build.outputs.branch == 'main' || contains(github.event.head_commit.message, ' release') }}
     steps:
       - name: SSH Deploy
         uses: appleboy/ssh-action@v0.1.6
         env:
-          IMAGE_WITH_TAG: '${{ env.DOCKER_REGISTRY_IMAGE }}:${{ needs.build.outputs.branch }}-${{ needs.build.outputs.sha_short }}'
+          IMAGE_WITH_TAG: "${{ env.DOCKER_REGISTRY_IMAGE }}:${{ needs.build.outputs.branch }}-${{ needs.build.outputs.sha_short }}"
+          DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
         with:
           host: ${{ secrets.DEPLOYMENT_HOST }}
           username: ${{ secrets.DEPLOYMENT_USER }}
           key: ${{ secrets.DEPLOYMENT_KEY }}
-          envs: IMAGE_WITH_TAG
-          # script: |
-          #   kubectl set image deployment/codesark-portfolio \
-          #   codesark-portfolio=cr.skpd.io/codesark/codesark-portfolio-frontend:$IMAGE_TAG \
-          #   -n codesark
+          envs: IMAGE_WITH_TAG,DOCKER_REGISTRY_NAME,DOCKER_USERNAME,DOCKER_PASSWORD
           script: |
-            cd ~/compose-apps/codesark-portfolio && \
-            rm -f compose.yml comopse.yaml && \
-            nextappimage=$IMAGE_WITH_TAG envsubst '$nextappimage' < compose.template.yaml > compose.yaml && \
-            cat compose.yaml && \
-            docker compose pull && \
-            docker compose up -d
+            # Define the working directory
+            WORK_DIR=~/stacks/codesark.dev
+
+            # Check if the directory exists, and create it if it doesn't
+            if [ ! -d "$WORK_DIR" ]; then
+              echo "Directory $WORK_DIR does not exist. Creating it..."
+              mkdir -p "$WORK_DIR"
+            fi
+
+            # Navigate to the working directory
+            cd "$WORK_DIR" || { echo "Failed to navigate to $WORK_DIR"; exit 1; }
+
+            # Login to Docker registry
+            echo "Logging in to Docker registry..."
+            echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_NAME -u "$DOCKER_USERNAME" --password-stdin || { echo "Docker login failed"; exit 1; }
+
+            # Check if a compose.yaml file exists
+            if [ -f "compose.yaml" ] || [ -f "compose.yml" ]; then
+              echo "Existing Docker Compose file detected."
+
+              # Stop and remove existing Docker Compose containers if running
+              if docker compose ps -q &>/dev/null; then
+                echo "Stopping running containers..."
+                docker compose down || { echo "Failed to stop running containers"; exit 1; }
+              fi
+
+              # Remove existing compose files
+              echo "Removing old compose files..."
+              rm -f compose.yaml compose.yml
+            fi
+
+            # Create .env file from secret
+            echo "Creating .env file from secret..."
+            echo "${{ secrets.DEPLOYMENT_ENV_VARS }}" > .env
+
+            # Generate the new compose.yaml file
+            echo "Creating a new compose.yaml file..."
+            cat <<EOF > compose.yaml
+            services:
+              codesark:
+                image: "${IMAGE_WITH_TAG}"
+                container_name: codesark
+                ports:
+                  - "8080:3000"
+                environment:
+                  - NODE_ENV=production
+                env_file:
+                  - .env
+                restart: always
+            EOF
+
+            # Pull the latest image and bring up the new container
+            echo "Pulling the latest image..."
+            docker compose pull || { echo "Failed to pull the image"; exit 1; }
+
+            echo "Starting the container..."
+            docker compose up -d || { echo "Failed to start the container"; exit 1; }
