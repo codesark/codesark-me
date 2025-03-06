@@ -1,0 +1,146 @@
+name: Build + Push + Deploy
+
+env:
+  DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
+  DOCKER_REGISTRY_IMAGE: ${{ secrets.DOCKER_REGISTRY_NAME }}/codesark/codesark-portfolio-next
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          # - linux/arm/v6
+          # - linux/arm/v7
+          - linux/arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure Vars
+        id: conf
+        shell: bash
+        run: |
+          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY_IMAGE }}
+          tags: |
+            type=raw,value=latest
+            type=sha,
+            type=raw,value=${{ steps.conf.outputs.branch }}
+            type=raw,value=${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY_NAME }}
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
+          outputs: type=image,name=${{ env.DOCKER_REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ github.workflow }}-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ matrix.platform }}
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+      - name: Upload digest
+        uses: actions/upload-artifact@v3
+        with:
+          name: digests
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+    outputs:
+      branch: ${{ steps.conf.outputs.branch }}
+      sha_short: ${{ steps.conf.outputs.sha_short }}
+      digest: ${{ steps.build.outputs.digest }}
+
+  push:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v3
+        with:
+          name: digests
+          path: /tmp/digests
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY_IMAGE }}
+          tags: |
+            type=raw,value=latest
+            type=sha,
+            type=raw,value=${{ needs.build.outputs.branch }}
+            type=raw,value=${{  needs.build.outputs.branch }}-${{ needs.build.outputs.sha_short }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY_NAME }}
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.DOCKER_REGISTRY_IMAGE }}@sha256:%s ' *)
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.DOCKER_REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+  deploy:
+    needs:
+      - build
+      - push
+    runs-on: ubuntu-latest
+    # only run if branch is main or commit have "release" tag
+    if: ${{ needs.build.outputs.branch == 'main' || contains(github.event.head_commit.message, 'release') }}
+    steps:
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v0.1.6
+        env:
+          IMAGE_WITH_TAG: '${{ env.DOCKER_REGISTRY_IMAGE }}:${{ needs.build.outputs.branch }}-${{ needs.build.outputs.sha_short }}'
+        with:
+          host: ${{ secrets.DEPLOYMENT_HOST }}
+          username: ${{ secrets.DEPLOYMENT_USER }}
+          key: ${{ secrets.DEPLOYMENT_KEY }}
+          envs: IMAGE_WITH_TAG
+          # script: |
+          #   kubectl set image deployment/codesark-portfolio \
+          #   codesark-portfolio=cr.skpd.io/codesark/codesark-portfolio-frontend:$IMAGE_TAG \
+          #   -n codesark
+          script: |
+            cd ~/compose-apps/codesark-portfolio && \
+            rm -f compose.yml comopse.yaml && \
+            nextappimage=$IMAGE_WITH_TAG envsubst '$nextappimage' < compose.template.yaml > compose.yaml && \
+            cat compose.yaml && \
+            docker compose pull && \
+            docker compose up -d
