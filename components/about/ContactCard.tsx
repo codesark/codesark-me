@@ -154,7 +154,7 @@ export function ContactCard() {
               <Label htmlFor="contact-subject">Message</Label>
               <Textarea
                 id="contact-message"
-                placeholder="Feel free to write anything you want!"
+                placeholder="Feel free to write me."
                 {...register("message")}
               />
               {errors.message && (
