@@ -1,6 +1,7 @@
 # Required secrets (repository/organization):
 #   DOCKER_USER, DOCKER_TOKEN - Docker Hub login
 #   DEPLOYMENT_KEY - SSH private key for deploy host
+#   DEPLOYMENT_USER - SSH user on deploy host (e.g. root)
 #   DEPLOYMENT_HOST, DEPLOYMENT_PORT - deploy server
 #   SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, SMTP_FROM, SMTP_TO
 # Optional vars (defaults in workflow): SMTP_FROM_NAME, NEXT_PUBLIC_SITE_URL
@@ -96,11 +97,11 @@ jobs:
 
       - name: Add SSH known hosts
         run: |
-          ssh-keyscan -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} >> ~/.ssh/known_hosts
 
       - name: Create deployment directory
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "mkdir -p ${{ env.DEPLOYMENT_DIR }}"
 
       - name: Generate docker-compose.yml from template
@@ -112,7 +113,7 @@ jobs:
         run: |
           scp -P ${{ secrets.DEPLOYMENT_PORT }} \
             /tmp/docker-compose.yml \
-            ${{ secrets.DEPLOYMENT_HOST }}:${{ env.DEPLOYMENT_DIR }}/docker-compose.yml
+            ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }}:${{ env.DEPLOYMENT_DIR }}/docker-compose.yml
 
       - name: Create and deploy .env from secrets
         env:
@@ -139,19 +140,19 @@ jobs:
           } > /tmp/deploy.env
           base64 -w0 /tmp/deploy.env > /tmp/deploy.env.b64
           scp -P ${{ secrets.DEPLOYMENT_PORT }} /tmp/deploy.env.b64 \
-            ${{ secrets.DEPLOYMENT_HOST }}:${{ env.DEPLOYMENT_DIR }}/.env.b64
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }}:${{ env.DEPLOYMENT_DIR }}/.env.b64
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "cd ${{ env.DEPLOYMENT_DIR }} && base64 -d .env.b64 > .env && chmod 600 .env && rm -f .env.b64"
 
       - name: Login to Docker Hub on deployment host
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "echo '${{ secrets.DOCKER_TOKEN }}' | docker login ${{ env.DOCKER_REGISTRY }} -u '${{ secrets.DOCKER_USER }}' --password-stdin"
 
       - name: Check existing deployment
         id: check-existing
         run: |
-          if ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          if ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "test -f ${{ env.DEPLOYMENT_DIR }}/docker-compose.yml"; then
             echo "exists=true" >> $GITHUB_OUTPUT
             echo "Existing docker-compose.yml found"
@@ -163,7 +164,7 @@ jobs:
       - name: Stop existing containers (if running)
         if: steps.check-existing.outputs.exists == 'true'
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "cd ${{ env.DEPLOYMENT_DIR }} && \
              if docker compose ps -q | grep -q .; then \
                echo 'Stopping existing containers...'; \
@@ -174,22 +175,22 @@ jobs:
 
       - name: Pull Docker image
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "docker pull ${{ needs.build-and-push.outputs.full_image }}"
 
       - name: Deploy with docker compose
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "cd ${{ env.DEPLOYMENT_DIR }} && docker compose up -d --remove-orphans"
 
       - name: Verify deployment
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "cd ${{ env.DEPLOYMENT_DIR }} && docker compose ps"
 
       - name: Check container health
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "cd ${{ env.DEPLOYMENT_DIR }} && \
              if docker compose ps --format json | grep -q '\"State\":\"running\"'; then \
                echo 'Container is running'; \
@@ -202,7 +203,7 @@ jobs:
       - name: Show container logs (if needed)
         if: failure()
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "cd ${{ env.DEPLOYMENT_DIR }} && docker compose logs --tail=50"
 
       - name: Deployment info
@@ -211,5 +212,5 @@ jobs:
           echo "   Image: ${{ needs.build-and-push.outputs.full_image }}"
           echo "   Tag: ${{ needs.build-and-push.outputs.image_tag }}"
           echo "   SHA: ${{ needs.build-and-push.outputs.sha_short }}"
-          echo "   Host: ${{ secrets.DEPLOYMENT_HOST }}"
+          echo "   Host: ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }}"
           echo "   Directory: ${{ env.DEPLOYMENT_DIR }}"
