@@ -2,9 +2,12 @@
 #   DOCKER_USER, DOCKER_TOKEN - Docker Hub login
 #   DEPLOYMENT_KEY - SSH private key for deploy host
 #   DEPLOYMENT_USER - SSH user on deploy host (e.g. root)
-#   DEPLOYMENT_HOST, DEPLOYMENT_PORT - deploy server
+#   DEPLOYMENT_HOST - deploy server hostname or IP only (no user@ prefix)
+#   DEPLOYMENT_PORT - SSH port (e.g. 22)
 #   SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, SMTP_FROM, SMTP_TO
-# Optional vars (defaults in workflow): SMTP_FROM_NAME, NEXT_PUBLIC_SITE_URL
+# Optional: SMTP_FROM_NAME. Vars (defaults in workflow): NEXT_PUBLIC_SITE_URL
+# Note: ssh-keyscan uses DEPLOYMENT_HOST only; ssh/scp use DEPLOYMENT_USER@DEPLOYMENT_HOST.
+# Avoid single/double quotes and newlines in secret values (SMTP_PASS, DOCKER_TOKEN, etc.).
 name: Build, Push and Deploy
 
 env:
@@ -18,6 +21,10 @@ on:
       - main
       - develop
   workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build-and-push:
@@ -34,16 +41,16 @@ jobs:
       - name: Configure variables
         id: conf
         run: |
-          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_OUTPUT"
+          echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Set job outputs
         id: set-outputs
         run: |
-          echo "sha_short=${{ steps.conf.outputs.sha_short }}" >> $GITHUB_OUTPUT
-          echo "branch=${{ steps.conf.outputs.branch }}" >> $GITHUB_OUTPUT
-          echo "image_tag=${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}" >> $GITHUB_OUTPUT
-          echo "full_image=${{ env.DOCKER_IMAGE }}:${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}" >> $GITHUB_OUTPUT
+          echo "sha_short=${{ steps.conf.outputs.sha_short }}" >> "$GITHUB_OUTPUT"
+          echo "branch=${{ steps.conf.outputs.branch }}" >> "$GITHUB_OUTPUT"
+          echo "image_tag=${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}" >> "$GITHUB_OUTPUT"
+          echo "full_image=${{ env.DOCKER_IMAGE }}:${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}" >> "$GITHUB_OUTPUT"
 
       - name: Docker metadata
         id: meta
@@ -86,6 +93,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     if: github.ref == 'refs/heads/main' && needs.build-and-push.result == 'success'
+    env:
+      FULL_IMAGE: ${{ needs.build-and-push.outputs.full_image }}
+      IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
+      SHA_SHORT: ${{ needs.build-and-push.outputs.sha_short }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -106,7 +117,7 @@ jobs:
 
       - name: Generate docker-compose.yml from template
         run: |
-          sed -e "s|\${DOCKER_IMAGE}|${{ needs.build-and-push.outputs.full_image }}|g" \
+          sed -e "s|\${DOCKER_IMAGE}|$FULL_IMAGE|g" \
               docker-compose.prod.yaml > /tmp/docker-compose.yml
 
       - name: Copy docker-compose.yml to deployment host
@@ -145,19 +156,22 @@ jobs:
             "cd ${{ env.DEPLOYMENT_DIR }} && base64 -d .env.b64 > .env && chmod 600 .env && rm -f .env.b64"
 
       - name: Login to Docker Hub on deployment host
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
         run: |
-          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
-            "echo '${{ secrets.DOCKER_TOKEN }}' | docker login ${{ env.DOCKER_REGISTRY }} -u '${{ secrets.DOCKER_USER }}' --password-stdin"
+          echo "$DOCKER_TOKEN" | ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
+            "docker login ${{ env.DOCKER_REGISTRY }} -u $DOCKER_USER --password-stdin"
 
       - name: Check existing deployment
         id: check-existing
         run: |
           if ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "test -f ${{ env.DEPLOYMENT_DIR }}/docker-compose.yml"; then
-            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "exists=true" >> "$GITHUB_OUTPUT"
             echo "Existing docker-compose.yml found"
           else
-            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "exists=false" >> "$GITHUB_OUTPUT"
             echo "No existing docker-compose.yml found"
           fi
 
@@ -175,8 +189,12 @@ jobs:
 
       - name: Pull Docker image
         run: |
+          if [ -z "$FULL_IMAGE" ]; then
+            echo "::error::FULL_IMAGE is empty (build-and-push.outputs.full_image was not set)"
+            exit 1
+          fi
           ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
-            "docker pull ${{ needs.build-and-push.outputs.full_image }}"
+            "docker pull $FULL_IMAGE"
 
       - name: Deploy with docker compose
         run: |
@@ -192,7 +210,8 @@ jobs:
         run: |
           ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} \
             "cd ${{ env.DEPLOYMENT_DIR }} && \
-             if docker compose ps --format json | grep -q '\"State\":\"running\"'; then \
+             running=\$(docker compose ps --format '{{ '{{' }}.State{{ '}}' }}' 2>/dev/null | grep -c running || true); \
+             if [ \"\$running\" -gt 0 ]; then \
                echo 'Container is running'; \
              else \
                echo 'Container may not be running properly'; \
@@ -209,8 +228,8 @@ jobs:
       - name: Deployment info
         run: |
           echo "Successfully deployed:"
-          echo "   Image: ${{ needs.build-and-push.outputs.full_image }}"
-          echo "   Tag: ${{ needs.build-and-push.outputs.image_tag }}"
-          echo "   SHA: ${{ needs.build-and-push.outputs.sha_short }}"
+          echo "   Image: $FULL_IMAGE"
+          echo "   Tag: $IMAGE_TAG"
+          echo "   SHA: $SHA_SHORT"
           echo "   Host: ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }}"
           echo "   Directory: ${{ env.DEPLOYMENT_DIR }}"
