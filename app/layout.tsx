@@ -13,8 +13,36 @@ const poppins = Poppins({
 const robotoMono = Roboto_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Savinay Kumar",
-  description: "Savinay Kumar Portfolio",
+  metadataBase: new URL("https://codesark.me"),
+  title: {
+    default: "Savinay Kumar | codesark",
+    template: "%s | Savinay Kumar",
+  },
+  description:
+    "Senior Software Engineer & Team Lead. Full-stack, ML, scalable systems. Building impact with technology.",
+  openGraph: {
+    title: "Savinay Kumar | codesark",
+    description:
+      "Senior Software Engineer & Team Lead. Full-stack, ML, scalable systems.",
+    url: "https://codesark.me",
+    siteName: "Savinay Kumar",
+    images: [
+      {
+        url: "/savinay-wall.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en-US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    creator: "@codesark",
+    title: "Savinay Kumar | codesark",
+    description:
+      "Senior Software Engineer & Team Lead. Full-stack, ML, scalable systems.",
+  },
 };
 
 export default function RootLayout({

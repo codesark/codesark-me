@@ -4,9 +4,12 @@ import Blog from "@/components/homepage-sections/Blog";
 import Hero from "@/components/homepage-sections/Hero";
 import Projects from "@/components/homepage-sections/Projects";
 import Skills from "@/components/homepage-sections/Skills";
+import type { BlogPost } from "@/lib/blog";
 import * as React from "react";
 
-export interface IHomepageProps {}
+export interface IHomepageProps {
+  posts?: BlogPost[];
+}
 
 export default function Homepage(props: IHomepageProps) {
   const [isHydrated, setIsHydrated] = React.useState(false);
@@ -39,7 +42,7 @@ export default function Homepage(props: IHomepageProps) {
       </section>
 
       <section id="blog" className="snap-start">
-        <Blog />
+        <Blog posts={props.posts ?? []} />
       </section>
     </>
   );

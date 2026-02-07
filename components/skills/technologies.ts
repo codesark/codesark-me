@@ -38,6 +38,7 @@ import PostmanOriginal from "devicons-react/lib/icons/PostmanOriginal";
 import SpringOriginal from "devicons-react/lib/icons/SpringOriginal";
 import TensorflowOriginal from "devicons-react/lib/icons/TensorflowOriginal";
 import VscodeOriginal from "devicons-react/lib/icons/VscodeOriginal";
+import SlackOriginal from "devicons-react/lib/icons/SlackOriginal";
 
 export const technologies = [
   {
@@ -265,5 +266,20 @@ export const technologies = [
     name: "Firebase",
     icon: FirebaseOriginal,
     description: "Firebase is a cloud platform for mobile and web development.",
+  },
+  {
+    name: "AI/ML",
+    icon: TensorflowOriginal,
+    description: "Artificial intelligence and machine learning.",
+  },
+  {
+    name: "Real-time chat",
+    icon: SlackOriginal,
+    description: "Real-time messaging and chat.",
+  },
+  {
+    name: "Mobile & Web",
+    icon: NextjsOriginal,
+    description: "Cross-platform mobile and web applications.",
   },
 ];

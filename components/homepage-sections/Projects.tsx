@@ -9,6 +9,16 @@ export interface IProjectsProps {}
 
 const projects = [
   {
+    title: "ViHi (by Neosenth)",
+    description: "Video-first gig platform: post a short video of your problem, get AI-matched professionals, compare bids and hire—or earn as a pro. Fair subscription model; launching February 2026.",
+    technologies: ["AI/ML", "Video", "Real-time chat", "Mobile & Web", "Subscription billing"],
+    url: "https://neosenth.com",
+    github: "",
+    images: ["image1.png", "image2.png"],
+    features: ["Feature 1", "Feature 2"],
+    highlighted: true,
+  },
+  {
     title: "SML Saarthi ",
     description: "Tracking, Monitoring, Alerting and Analytics solution for SML ISUZU customer. Fleet Optimization for buses and trucks.",
     technologies: ["React", "Node.js", "Kafka", "GraphQL", "Material UI", "Google Maps", "Typescript"],
@@ -16,6 +26,7 @@ const projects = [
     github: "",
     images: ["image1.png", "image2.png"],
     features: ["Feature 1", "Feature 2"],
+    highlighted: false,
   },
   {
     title: "Avarta Life",
@@ -25,16 +36,8 @@ const projects = [
     github: "https://github.com/orgs/Avarta-Life/repositories",
     images: ["image1.png", "image2.png"],
     features: ["Feature 1", "Feature 2"],
+    highlighted: false,
   },
-  // {
-  //   title: "",
-  //   description: "Smart Recycling App | Gemini AI powered app to help people recycle and reuse waste materials.",
-  //   technologies: ["Gemini AI", "Next.js", "Flutter", "FastAPI", "React", "Tailwind CSS", "Google Maps", "RAG","Firebase"],
-  //   url: "https://avarta.life",
-  //   github: "https://github.com/orgs/Avarta-Life/repositories",
-  //   images: ["image1.png", "image2.png"],
-  //   features: ["Feature 1", "Feature 2"],
-  // },
 ]
 
 export default function Projects(props: IProjectsProps) {
@@ -47,10 +50,13 @@ export default function Projects(props: IProjectsProps) {
         </h1>
       </FadeInWhenVisible>
       <hr />
-      <div className="flex align-items-stretch flex-wrap lg:flex-nowrap gap-4 lg:gap-10 p-5">
+      <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-10 p-5 items-stretch">
         {projects.map((project) => (
-          <div key={project.title} className="w-full lg:w-2/3">
-            <FadeInWhenVisible className="h-full">
+          <div
+            key={project.title}
+            className={`flex ${project.highlighted ? "w-full" : "w-full lg:w-2/3"} min-h-0`}
+          >
+            <FadeInWhenVisible className="h-full w-full flex min-h-0">
               <ProjectCard
                 title={project.title}
                 description={project.description}
@@ -59,6 +65,7 @@ export default function Projects(props: IProjectsProps) {
                 github={project.github}
                 images={project.images}
                 features={project.features}
+                highlighted={project.highlighted}
               />
             </FadeInWhenVisible>
           </div>

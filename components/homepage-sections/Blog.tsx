@@ -1,11 +1,18 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import FadeInWhenVisible from "../animation/FadeInWhenVisible";
+import type { BlogPost } from "@/lib/blog";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export interface IBlogProps {}
+export interface IBlogProps {
+  posts: BlogPost[];
+}
 
 export default function Blog(props: IBlogProps) {
+  const { posts } = props;
+
   return (
     <div className="relative w-full min-h-screen max-w-screen-xl mx-auto flex flex-col justify-center overflow-hidden">
       <FadeInWhenVisible>
@@ -15,19 +22,50 @@ export default function Blog(props: IBlogProps) {
         </h1>
       </FadeInWhenVisible>
       <hr />
-      <div className="flex align-items-stretch flex-wrap lg:flex-nowrap gap-4 lg:gap-10 p-5">
-        <div className="w-full lg:w-2/3">
+      <div className="flex flex-col gap-4 lg:gap-6 p-5 pb-20">
+        {posts.length === 0 ? (
           <FadeInWhenVisible className="h-full">
-            {/* <AboutCard /> */}
-            <></>
+            <p className="text-gray-500 text-center py-10">No posts yet.</p>
           </FadeInWhenVisible>
-        </div>
-        <div className="w-full lg:w-1/3">
-          <FadeInWhenVisible>
-            {/* <ContactCard /> */}
-            <></>
-          </FadeInWhenVisible>
-        </div>
+        ) : (
+          posts.map((post) => (
+            <FadeInWhenVisible key={post.slug} className="h-full">
+              <Card className="min-w-[300px] transition hover:border-slate-600">
+                <CardHeader>
+                  <CardTitle className="text-xl">
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="hover:underline focus:underline"
+                    >
+                      {post.title}
+                    </Link>
+                  </CardTitle>
+                  <CardDescription>
+                    {post.excerpt}
+                  </CardDescription>
+                  <time
+                    dateTime={post.date}
+                    className="text-gray-500 text-sm"
+                  >
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                </CardHeader>
+                <CardContent>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    Read more →
+                  </Link>
+                </CardContent>
+              </Card>
+            </FadeInWhenVisible>
+          ))
+        )}
       </div>
     </div>
   );

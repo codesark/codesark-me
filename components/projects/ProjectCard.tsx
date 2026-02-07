@@ -8,16 +8,21 @@ import { Label } from '@/components/ui/label';
 import { LoadingButton } from '@/components/ui/loading-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckCircleIcon, ExpandIcon, SquareArrowOutUpRightIcon, XCircleIcon } from 'lucide-react';
-import * as React from 'react';
+import { CreditCard, SquareArrowOutUpRightIcon, Video } from "lucide-react";
+import * as React from "react";
 
-import { technologies } from '../skills/technologies';
-import Link from 'next/link';
+import { technologies } from "../skills/technologies";
+import Link from "next/link";
 
 const techMap = technologies.reduce((acc, tech) => {
   acc[tech.name] = tech;
   return acc;
-}, {} as Record<string, typeof technologies[number]>);
+}, {} as Record<string, (typeof technologies)[number]>);
+
+const lucideTechIcons: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  Video: Video as React.ComponentType<{ size?: number; className?: string }>,
+  "Subscription billing": CreditCard as React.ComponentType<{ size?: number; className?: string }>,
+};
 
 export interface IProjectCardProps {
   title: string;
@@ -26,17 +31,32 @@ export interface IProjectCardProps {
   url: string;
   github: string;
   images: string[];
-  features: string[]
+  features: string[];
+  highlighted?: boolean;
 }
 
 export default function ProjectCard(props: IProjectCardProps) {
+  const highlighted = props.highlighted === true;
   return (
-    <Card className="min-w-[300px]">
+    <Card
+      className={
+        highlighted
+          ? "min-w-[300px] h-full flex flex-col border-2 border-primary/50 ring-1 ring-primary/20"
+          : "min-w-[300px] h-full flex flex-col"
+      }
+    >
       <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
+        {highlighted && (
+          <span className="text-xs font-semibold uppercase tracking-wide text-primary mb-1">
+            Featured
+          </span>
+        )}
+        <CardTitle className={highlighted ? "text-2xl" : undefined}>
+          {props.title}
+        </CardTitle>
         <CardDescription>{props.description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 flex flex-col">
         <div className="flex pb-5">
           {props.url &&
           <Link href={props.url} target="_blank" rel="noopener noreferrer" className="">
@@ -47,19 +67,21 @@ export default function ProjectCard(props: IProjectCardProps) {
             <div className="flex flex-nowra items-center border border-primary px-2 py-1 rounded-lg mr-4">Github<SquareArrowOutUpRightIcon size={20} className='ml-1' /></div>
           </Link>}
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 flex-1">
           <Label>Technologies</Label>
           <div className="flex flex-wrap w-full gap-y-2">
             {props.technologies.slice(0, 8).map((technology) => {
               const tech = techMap[technology] || { name: technology };
+              const LucideIcon = lucideTechIcons[technology];
+              const IconComponent = tech.icon ?? LucideIcon;
               return (
                 <span className="flex flex-nowrap items-center mr-2 border px-2 py-1 rounded-lg text-sm" key={technology}>
-                  {tech.icon && <tech.icon size={20} className='mr-1' />}
+                  {IconComponent && <IconComponent size={20} className="mr-1" />}
                   {technology}
                 </span>
               );
-              { technologies.length > 8 && <span className="text-sm">...</span> }
             })}
+            {props.technologies.length > 8 && <span className="text-sm">...</span>}
           </div>
           {/* <div className="grid grid-flow-row gap-2">
             <Label>Features</Label>
