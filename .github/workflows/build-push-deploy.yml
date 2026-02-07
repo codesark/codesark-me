@@ -97,7 +97,7 @@ jobs:
 
       - name: Add SSH known hosts
         run: |
-          ssh-keyscan -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} >> ~/.ssh/known_hosts
 
       - name: Create deployment directory
         run: |
