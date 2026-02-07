@@ -1,12 +1,26 @@
 # Template for production deploy. CI replaces ${DOCKER_IMAGE} with the built image tag.
+version: '3.8'
+
 services:
   app:
     image: ${DOCKER_IMAGE}
     container_name: codesark-me
-    ports:
-      - "8081:3000"
-    environment:
-      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - proxy_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codesark.rule=Host(`codesark.me`) || Host(`www.codesark.me`)"
+      - "traefik.http.services.codesark.loadbalancer.server.port=3000"
+      - "traefik.http.routers.codesark.entrypoints=websecure"
+      - "traefik.http.routers.codesark.tls.certresolver=letsencrypt"
     env_file:
       - .env
-    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+
+networks:
+  proxy_net:
+    external: true
