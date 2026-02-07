@@ -64,10 +64,10 @@ const LoadingButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
                           )}
                         />
                       )}
-                      {child.props.children}
+                      {(child.props as { children?: React.ReactNode }).children}
                     </>
                   ),
-                });
+                } as React.HTMLAttributes<HTMLElement>);
               }
             )}
           </>
