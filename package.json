@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -50,6 +51,7 @@
     "postcss": "^8",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.18",
+    "to-ico": "^1.1.5",
     "typescript": "^5"
   }
 }
