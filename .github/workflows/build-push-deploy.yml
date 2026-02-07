@@ -1,201 +1,215 @@
-name: Build + Push + Deploy
+# Required secrets (repository/organization):
+#   DOCKER_USER, DOCKER_TOKEN - Docker Hub login
+#   DEPLOYMENT_KEY - SSH private key for deploy host
+#   DEPLOYMENT_HOST, DEPLOYMENT_PORT - deploy server
+#   SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, SMTP_FROM, SMTP_TO
+# Optional vars (defaults in workflow): SMTP_FROM_NAME, NEXT_PUBLIC_SITE_URL
+name: Build, Push and Deploy
 
 env:
-  DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
-  DOCKER_REGISTRY_IMAGE: ${{ secrets.DOCKER_REGISTRY_NAME }}/codesark/codesark
+  DOCKER_REGISTRY: docker.io
+  DOCKER_IMAGE: codesark/codesark-me
+  DEPLOYMENT_DIR: ~/apps/codesark-me
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
-      # - dev
-    tags:
-      - v*
+      - develop
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          # - linux/arm/v6
-          # - linux/arm/v7
-          #  - linux/arm64
+    outputs:
+      sha_short: ${{ steps.set-outputs.outputs.sha_short }}
+      branch: ${{ steps.set-outputs.outputs.branch }}
+      image_tag: ${{ steps.set-outputs.outputs.image_tag }}
+      full_image: ${{ steps.set-outputs.outputs.full_image }}
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-      - name: Configure Vars
+
+      - name: Configure variables
         id: conf
-        shell: bash
         run: |
           echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      - name: Docker meta
+
+      - name: Set job outputs
+        id: set-outputs
+        run: |
+          echo "sha_short=${{ steps.conf.outputs.sha_short }}" >> $GITHUB_OUTPUT
+          echo "branch=${{ steps.conf.outputs.branch }}" >> $GITHUB_OUTPUT
+          echo "image_tag=${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}" >> $GITHUB_OUTPUT
+          echo "full_image=${{ env.DOCKER_IMAGE }}:${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}" >> $GITHUB_OUTPUT
+
+      - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_REGISTRY_IMAGE }}
+          images: ${{ env.DOCKER_IMAGE }}
           tags: |
             type=raw,value=latest
-            type=sha,
+            type=sha
             type=raw,value=${{ steps.conf.outputs.branch }}
             type=raw,value=${{ steps.conf.outputs.branch }}-${{ steps.conf.outputs.sha_short }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.DOCKER_REGISTRY_NAME }}
-          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
-      - name: Create .env file
-        run: |
-          echo "${{ secrets.DEPLOYMENT_ENV_VARS }}" > .env
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push by digest
-        id: build
-        uses: docker/build-push-action@v5
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: ${{ matrix.platform }}
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env.DOCKER_REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=${{ github.workflow }}-${{ matrix.platform }}
-          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ matrix.platform }}
-          secret-files: |
-            "env_file=.env"
-      - name: Export digest
-        run: |
-          mkdir -p /tmp/digests
-          digest="${{ steps.build.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"
-      - name: Upload digest
-        uses: actions/upload-artifact@v4
-        with:
-          name: digests
-          path: /tmp/digests/*
-          if-no-files-found: error
-          retention-days: 1
-    outputs:
-      branch: ${{ steps.conf.outputs.branch }}
-      sha_short: ${{ steps.conf.outputs.sha_short }}
-      digest: ${{ steps.build.outputs.digest }}
 
-  push:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - name: Download digests
-        uses: actions/download-artifact@v4
-        with:
-          name: digests
-          path: /tmp/digests
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.DOCKER_REGISTRY_IMAGE }}
-          tags: |
-            type=raw,value=latest
-            type=sha,
-            type=raw,value=${{ needs.build.outputs.branch }}
-            type=raw,value=${{  needs.build.outputs.branch }}-${{ needs.build.outputs.sha_short }}
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.DOCKER_REGISTRY_NAME }}
-          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
-      - name: Create manifest list and push
-        working-directory: /tmp/digests
+      - name: Image info
         run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.DOCKER_REGISTRY_IMAGE }}@sha256:%s ' *)
-      - name: Inspect image
-        run: |
-          docker buildx imagetools inspect ${{ env.DOCKER_REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+          echo "Successfully pushed images:"
+          echo "${{ steps.meta.outputs.tags }}" | while read -r tag; do
+            echo "   - $tag"
+          done
+
   deploy:
-    needs:
-      - build
-      - push
     runs-on: ubuntu-latest
-    if: ${{ needs.build.outputs.branch == 'main' || contains(github.event.head_commit.message, ' release') }}
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main' && needs.build-and-push.result == 'success'
     steps:
-      - name: SSH Deploy
-        uses: appleboy/ssh-action@v0.1.6
-        env:
-          IMAGE_WITH_TAG: "${{ env.DOCKER_REGISTRY_IMAGE }}:${{ needs.build.outputs.branch }}-${{ needs.build.outputs.sha_short }}"
-          DOCKER_REGISTRY_NAME: ${{ secrets.DOCKER_REGISTRY_NAME }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          host: ${{ secrets.DEPLOYMENT_HOST }}
-          username: ${{ secrets.DEPLOYMENT_USER }}
-          key: ${{ secrets.DEPLOYMENT_KEY }}
-          envs: IMAGE_WITH_TAG,DOCKER_REGISTRY_NAME,DOCKER_USERNAME,DOCKER_PASSWORD
-          script: |
-            # Define the working directory
-            WORK_DIR=~/stacks/codesark.dev
+          ssh-private-key: ${{ secrets.DEPLOYMENT_KEY }}
 
-            # Check if the directory exists, and create it if it doesn't
-            if [ ! -d "$WORK_DIR" ]; then
-              echo "Directory $WORK_DIR does not exist. Creating it..."
-              mkdir -p "$WORK_DIR"
-            fi
+      - name: Add SSH known hosts
+        run: |
+          ssh-keyscan -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} >> ~/.ssh/known_hosts
 
-            # Navigate to the working directory
-            cd "$WORK_DIR" || { echo "Failed to navigate to $WORK_DIR"; exit 1; }
+      - name: Create deployment directory
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "mkdir -p ${{ env.DEPLOYMENT_DIR }}"
 
-            # Login to Docker registry
-            echo "Logging in to Docker registry..."
-            echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_NAME -u "$DOCKER_USERNAME" --password-stdin || { echo "Docker login failed"; exit 1; }
+      - name: Generate docker-compose.yml from template
+        run: |
+          sed -e "s|\${DOCKER_IMAGE}|${{ needs.build-and-push.outputs.full_image }}|g" \
+              docker-compose.prod.yaml > /tmp/docker-compose.yml
 
-            # Check if a compose.yaml file exists
-            if [ -f "compose.yaml" ] || [ -f "compose.yml" ]; then
-              echo "Existing Docker Compose file detected."
+      - name: Copy docker-compose.yml to deployment host
+        run: |
+          scp -P ${{ secrets.DEPLOYMENT_PORT }} \
+            /tmp/docker-compose.yml \
+            ${{ secrets.DEPLOYMENT_HOST }}:${{ env.DEPLOYMENT_DIR }}/docker-compose.yml
 
-              # Stop and remove existing Docker Compose containers if running
-              if docker compose ps -q &>/dev/null; then
-                echo "Stopping running containers..."
-                docker compose down || { echo "Failed to stop running containers"; exit 1; }
-              fi
+      - name: Create and deploy .env from secrets
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_FROM_NAME: ${{ secrets.SMTP_FROM_NAME }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          SMTP_TO: ${{ secrets.SMTP_TO }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://codesark.me' }}
+        run: |
+          {
+            echo "SMTP_HOST=${SMTP_HOST}"
+            echo "SMTP_PORT=${SMTP_PORT:-587}"
+            echo "SMTP_SECURE=${SMTP_SECURE:-false}"
+            echo "SMTP_USER=${SMTP_USER}"
+            echo "SMTP_PASS=${SMTP_PASS}"
+            echo "SMTP_FROM_NAME=${SMTP_FROM_NAME:-codesark.me}"
+            echo "SMTP_FROM=${SMTP_FROM}"
+            echo "SMTP_TO=${SMTP_TO}"
+            echo "NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://codesark.me}"
+          } > /tmp/deploy.env
+          base64 -w0 /tmp/deploy.env > /tmp/deploy.env.b64
+          scp -P ${{ secrets.DEPLOYMENT_PORT }} /tmp/deploy.env.b64 \
+            ${{ secrets.DEPLOYMENT_HOST }}:${{ env.DEPLOYMENT_DIR }}/.env.b64
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "cd ${{ env.DEPLOYMENT_DIR }} && base64 -d .env.b64 > .env && chmod 600 .env && rm -f .env.b64"
 
-              # Remove existing compose files
-              echo "Removing old compose files..."
-              rm -f compose.yaml compose.yml
-            fi
+      - name: Login to Docker Hub on deployment host
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "echo '${{ secrets.DOCKER_TOKEN }}' | docker login ${{ env.DOCKER_REGISTRY }} -u '${{ secrets.DOCKER_USER }}' --password-stdin"
 
-            # Create .env file from secret
-            echo "Creating .env file from secret..."
-            echo "${{ secrets.DEPLOYMENT_ENV_VARS }}" > .env
+      - name: Check existing deployment
+        id: check-existing
+        run: |
+          if ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "test -f ${{ env.DEPLOYMENT_DIR }}/docker-compose.yml"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Existing docker-compose.yml found"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No existing docker-compose.yml found"
+          fi
 
-            # Generate the new compose.yaml file
-            echo "Creating a new compose.yaml file..."
-            cat <<EOF > compose.yaml
-            services:
-              codesark:
-                image: "${IMAGE_WITH_TAG}"
-                container_name: codesark
-                ports:
-                  - "8081:3000"
-                environment:
-                  - NODE_ENV=production
-                env_file:
-                  - .env
-                restart: always
-            EOF
+      - name: Stop existing containers (if running)
+        if: steps.check-existing.outputs.exists == 'true'
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "cd ${{ env.DEPLOYMENT_DIR }} && \
+             if docker compose ps -q | grep -q .; then \
+               echo 'Stopping existing containers...'; \
+               docker compose down --remove-orphans || true; \
+             else \
+               echo 'No running containers found'; \
+             fi"
 
-            # Pull the latest image and bring up the new container
-            echo "Pulling the latest image..."
-            docker compose pull || { echo "Failed to pull the image"; exit 1; }
+      - name: Pull Docker image
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "docker pull ${{ needs.build-and-push.outputs.full_image }}"
 
-            echo "Starting the container..."
-            docker compose up -d || { echo "Failed to start the container"; exit 1; }
+      - name: Deploy with docker compose
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "cd ${{ env.DEPLOYMENT_DIR }} && docker compose up -d --remove-orphans"
+
+      - name: Verify deployment
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "cd ${{ env.DEPLOYMENT_DIR }} && docker compose ps"
+
+      - name: Check container health
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "cd ${{ env.DEPLOYMENT_DIR }} && \
+             if docker compose ps --format json | grep -q '\"State\":\"running\"'; then \
+               echo 'Container is running'; \
+             else \
+               echo 'Container may not be running properly'; \
+               docker compose ps; \
+               exit 1; \
+             fi"
+
+      - name: Show container logs (if needed)
+        if: failure()
+        run: |
+          ssh -p ${{ secrets.DEPLOYMENT_PORT }} ${{ secrets.DEPLOYMENT_HOST }} \
+            "cd ${{ env.DEPLOYMENT_DIR }} && docker compose logs --tail=50"
+
+      - name: Deployment info
+        run: |
+          echo "Successfully deployed:"
+          echo "   Image: ${{ needs.build-and-push.outputs.full_image }}"
+          echo "   Tag: ${{ needs.build-and-push.outputs.image_tag }}"
+          echo "   SHA: ${{ needs.build-and-push.outputs.sha_short }}"
+          echo "   Host: ${{ secrets.DEPLOYMENT_HOST }}"
+          echo "   Directory: ${{ env.DEPLOYMENT_DIR }}"

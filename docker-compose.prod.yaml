@@ -1,0 +1,12 @@
+# Template for production deploy. CI replaces ${DOCKER_IMAGE} with the built image tag.
+services:
+  app:
+    image: ${DOCKER_IMAGE}
+    container_name: codesark-me
+    ports:
+      - "8081:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env
+    restart: always
