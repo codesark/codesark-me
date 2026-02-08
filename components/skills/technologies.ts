@@ -39,6 +39,11 @@ import SpringOriginal from "devicons-react/lib/icons/SpringOriginal";
 import TensorflowOriginal from "devicons-react/lib/icons/TensorflowOriginal";
 import VscodeOriginal from "devicons-react/lib/icons/VscodeOriginal";
 import SlackOriginal from "devicons-react/lib/icons/SlackOriginal";
+import ApachekafkaOriginal from "devicons-react/lib/icons/ApachekafkaOriginal";
+import GrpcOriginal from "devicons-react/lib/icons/GrpcOriginal";
+import DartOriginal from "devicons-react/lib/icons/DartOriginal";
+import PytorchOriginal from "devicons-react/lib/icons/PytorchOriginal";
+import OpencvOriginal from "devicons-react/lib/icons/OpencvOriginal";
 
 export const technologies = [
   {
@@ -281,5 +286,30 @@ export const technologies = [
     name: "Mobile & Web",
     icon: NextjsOriginal,
     description: "Cross-platform mobile and web applications.",
+  },
+  {
+    name: "Kafka",
+    icon: ApachekafkaOriginal,
+    description: "Apache Kafka is a distributed event streaming platform.",
+  },
+  {
+    name: "gRPC",
+    icon: GrpcOriginal,
+    description: "gRPC is a high-performance RPC framework.",
+  },
+  {
+    name: "Dart",
+    icon: DartOriginal,
+    description: "Dart is a programming language for Flutter and beyond.",
+  },
+  {
+    name: "PyTorch",
+    icon: PytorchOriginal,
+    description: "PyTorch is an open-source machine learning framework.",
+  },
+  {
+    name: "OpenCV",
+    icon: OpencvOriginal,
+    description: "OpenCV is a library for computer vision and image processing.",
   },
 ];

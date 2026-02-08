@@ -1,6 +1,6 @@
 ---
 title: "Building AI-Powered Products"
-date: "2025-01-20"
+date: "2026-01-20"
 excerpt: "Integrating ML in production: RAG, APIs, and lessons from building AI-driven applications."
 slug: "building-ai-powered-products"
 ---

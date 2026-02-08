@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
@@ -38,20 +39,20 @@ export interface IProjectCardProps {
 export default function ProjectCard(props: IProjectCardProps) {
   const highlighted = props.highlighted === true;
   return (
-    <Card
-      className={
-        highlighted
-          ? "min-w-[300px] h-full flex flex-col border-2 border-primary/50 ring-1 ring-primary/20"
-          : "min-w-[300px] h-full flex flex-col"
-      }
+    <motion.div
+      className="h-full"
+      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+      transition={{ type: "tween", duration: 0.2 }}
     >
+      <Card
+        className={
+          highlighted
+            ? "min-w-[300px] h-full flex flex-col border-2 border-primary/50 ring-1 ring-primary/20 transition-shadow duration-200 hover:shadow-lg hover:shadow-primary/5"
+            : "min-w-[300px] h-full flex flex-col transition-shadow duration-200 hover:shadow-lg hover:shadow-black/10"
+        }
+      >
       <CardHeader>
-        {highlighted && (
-          <span className="text-xs font-semibold uppercase tracking-wide text-primary mb-1">
-            Featured
-          </span>
-        )}
-        <CardTitle className={highlighted ? "text-2xl" : undefined}>
+        <CardTitle>
           {props.title}
         </CardTitle>
         <CardDescription>{props.description}</CardDescription>
@@ -70,7 +71,7 @@ export default function ProjectCard(props: IProjectCardProps) {
         <div className="flex flex-col gap-2 flex-1">
           <Label>Technologies</Label>
           <div className="flex flex-wrap w-full gap-y-2">
-            {props.technologies.slice(0, 8).map((technology) => {
+            {props.technologies.slice(0, highlighted ? 12 : 8).map((technology) => {
               const tech = techMap[technology] || { name: technology };
               const LucideIcon = lucideTechIcons[technology];
               const IconComponent = tech.icon ?? LucideIcon;
@@ -81,7 +82,7 @@ export default function ProjectCard(props: IProjectCardProps) {
                 </span>
               );
             })}
-            {props.technologies.length > 8 && <span className="text-sm">...</span>}
+            {props.technologies.length > (highlighted ? 12 : 8) && <span className="text-sm">...</span>}
           </div>
           {/* <div className="grid grid-flow-row gap-2">
             <Label>Features</Label>
@@ -117,6 +118,7 @@ export default function ProjectCard(props: IProjectCardProps) {
           )}
         </DialogContent>
       </Dialog> */}
-    </Card>
+      </Card>
+    </motion.div>
   );
 }

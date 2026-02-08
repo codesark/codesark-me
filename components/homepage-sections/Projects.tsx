@@ -9,9 +9,9 @@ export interface IProjectsProps {}
 
 const projects = [
   {
-    title: "ViHi (by Neosenth)",
-    description: "Video-first gig platform: post a short video of your problem, get AI-matched professionals, compare bids and hire—or earn as a pro. Fair subscription model; launching February 2026.",
-    technologies: ["AI/ML", "Video", "Real-time chat", "Mobile & Web", "Subscription billing"],
+    title: "ViHi",
+    description: "Video-first gig platform: post a short video of your problem, get AI-matched professionals, compare bids and hire—or earn as a pro. Fair subscription model.",
+    technologies: ["Go (Golang)", "Redis", "PostgreSQL", "Kafka", "ConnectRPC", "gRPC", "Flutter", "Dart", "PyTorch", "TensorFlow", "OpenCV"],
     url: "https://neosenth.com",
     github: "",
     images: ["image1.png", "image2.png"],
@@ -51,12 +51,12 @@ export default function Projects(props: IProjectsProps) {
       </FadeInWhenVisible>
       <hr />
       <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-10 p-5 items-stretch">
-        {projects.map((project) => (
+        {projects.map((project, index) => (
           <div
             key={project.title}
             className={`flex ${project.highlighted ? "w-full" : "w-full lg:w-2/3"} min-h-0`}
           >
-            <FadeInWhenVisible className="h-full w-full flex min-h-0">
+            <FadeInWhenVisible className="h-full w-full flex min-h-0" delay={index * 0.1}>
               <ProjectCard
                 title={project.title}
                 description={project.description}

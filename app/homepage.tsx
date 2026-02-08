@@ -4,6 +4,8 @@ import Blog from "@/components/homepage-sections/Blog";
 import Hero from "@/components/homepage-sections/Hero";
 import Projects from "@/components/homepage-sections/Projects";
 import Skills from "@/components/homepage-sections/Skills";
+import Footer from "@/components/footer/Footer";
+import FadeInWhenVisible from "@/components/animation/FadeInWhenVisible";
 import type { BlogPost } from "@/lib/blog";
 import * as React from "react";
 
@@ -17,6 +19,20 @@ export default function Homepage(props: IHomepageProps) {
   React.useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  // Scroll to hash target when landing with a hash (e.g. /#blog from "Back to Blog")
+  React.useEffect(() => {
+    if (!isHydrated) return;
+    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
+    if (!hash) return;
+    const timer = window.setTimeout(() => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+    return () => window.clearTimeout(timer);
+  }, [isHydrated]);
 
   return !isHydrated ? (
     <div className="w-full h-full flex justify-center items-center">
@@ -44,6 +60,9 @@ export default function Homepage(props: IHomepageProps) {
       <section id="blog" className="snap-start">
         <Blog posts={props.posts ?? []} />
       </section>
+      <FadeInWhenVisible delay={0.1}>
+        <Footer />
+      </FadeInWhenVisible>
     </>
   );
 }

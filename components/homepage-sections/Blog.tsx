@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { ArrowRight, CalendarDays, FileText } from "lucide-react";
 import FadeInWhenVisible from "../animation/FadeInWhenVisible";
 import type { BlogPost } from "@/lib/blog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,25 +29,29 @@ export default function Blog(props: IBlogProps) {
             <p className="text-gray-500 text-center py-10">No posts yet.</p>
           </FadeInWhenVisible>
         ) : (
-          posts.map((post) => (
-            <FadeInWhenVisible key={post.slug} className="h-full">
-              <Card className="min-w-[300px] transition hover:border-slate-600">
+          posts.map((post, index) => (
+            <FadeInWhenVisible key={post.slug} className="h-full" delay={index * 0.08}>
+              <Card className="min-w-[300px] transition hover:border-slate-600 border-l-4 border-l-primary/40">
                 <CardHeader>
-                  <CardTitle className="text-xl">
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="hover:underline focus:underline"
-                    >
-                      {post.title}
-                    </Link>
-                  </CardTitle>
-                  <CardDescription>
+                  <div className="flex items-start gap-2 mb-1">
+                    <FileText className="size-5 text-primary shrink-0 mt-0.5" aria-hidden />
+                    <CardTitle className="text-xl">
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="hover:underline focus:underline"
+                      >
+                        {post.title}
+                      </Link>
+                    </CardTitle>
+                  </div>
+                  <CardDescription className="mt-2">
                     {post.excerpt}
                   </CardDescription>
                   <time
                     dateTime={post.date}
-                    className="text-gray-500 text-sm"
+                    className="text-gray-500 text-sm flex items-center gap-1.5 mt-2"
                   >
+                    <CalendarDays className="size-4 shrink-0" aria-hidden />
                     {new Date(post.date).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
@@ -57,9 +62,10 @@ export default function Blog(props: IBlogProps) {
                 <CardContent>
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="text-primary hover:underline font-medium"
+                    className="text-primary hover:underline font-medium inline-flex items-center gap-1.5 group"
                   >
-                    Read more →
+                    Read more
+                    <ArrowRight className="size-4 shrink-0 group-hover:translate-x-0.5 transition-transform" aria-hidden />
                   </Link>
                 </CardContent>
               </Card>

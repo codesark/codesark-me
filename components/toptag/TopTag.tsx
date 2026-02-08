@@ -24,11 +24,11 @@ const itemVariants: Variants = {
 export interface ITopTagProps {}
 
 const MenuItems = [
-  { name: "Home", icon: HomeIcon, path: "#hero" },
-  { name: "About", icon: UserCircleIcon, path: "#about" },
-  { name: "Skills", icon: WrenchScrewdriverIcon, path: "#skills" },
-  { name: "Projects", icon: CpuChipIcon, path: "#projects" },
-  { name: "Blog", icon: NewspaperIcon, path: "#blog" },
+  { name: "Home", icon: HomeIcon, path: "/#hero" },
+  { name: "About", icon: UserCircleIcon, path: "/#about" },
+  { name: "Skills", icon: WrenchScrewdriverIcon, path: "/#skills" },
+  { name: "Projects", icon: CpuChipIcon, path: "/#projects" },
+  { name: "Blog", icon: NewspaperIcon, path: "/#blog" },
 ];
 
 export default function TopTag(props: ITopTagProps) {

@@ -9,7 +9,7 @@ const socials = [
   {
     _id: 1,
     network: "x",
-    url: "https://twitter.com/codesark",
+    url: "https://x.com/codesark",
   },
   {
     _id: 2,

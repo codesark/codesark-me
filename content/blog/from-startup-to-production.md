@@ -1,6 +1,6 @@
 ---
 title: "From Startup to Production"
-date: "2025-02-01"
+date: "2026-02-01"
 excerpt: "Taking a product from idea to scale: reliability, performance, and lessons learned along the way."
 slug: "from-startup-to-production"
 ---

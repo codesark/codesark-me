@@ -1,6 +1,6 @@
 ---
 title: "Scaling APIs for Growth"
-date: "2025-01-15"
+date: "2026-01-15"
 excerpt: "Patterns and practices that helped us achieve 500% API speed improvements and 10x system scale."
 slug: "scaling-apis-for-growth"
 ---
