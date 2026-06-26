@@ -19,11 +19,12 @@ export default function SkillCard(props: ISkillCardProps) {
 
         <p>
           In <b className="text-yellow-600">cloud and DevOps</b>, I specialize
-          in <strong>Docker</strong>, <strong>Kubernetes</strong>, and{" "}
-          <strong>CI/CD pipelines</strong> using <strong>Jenkins</strong> and{" "}
-          <strong>GitHub Actions</strong>, with extensive experience across{" "}
-          <strong>AWS</strong>, <strong>GCP</strong>, and <strong>Azure</strong>
-          . My proficiency in <strong>Linux</strong> and{" "}
+          in <strong>Docker</strong>, <strong>Kubernetes</strong>,{" "}
+          <strong>Terraform</strong>, and <strong>CI/CD pipelines</strong> using{" "}
+          <strong>Jenkins</strong> and <strong>GitHub Actions</strong>, with
+          extensive experience across <strong>AWS</strong>,{" "}
+          <strong>GCP</strong>, and <strong>Azure</strong>. My proficiency in{" "}
+          <strong>Linux</strong> and{" "}
           <strong>networking</strong> ensures robust system architectures and
           seamless deployments. ☁️
         </p>
@@ -39,18 +40,22 @@ export default function SkillCard(props: ISkillCardProps) {
         <p>
           My <b className="text-yellow-600">web development</b> skills cover{" "}
           <strong>RESTful</strong> and <strong>GraphQL</strong> APIs, utilizing
-          frameworks like <strong>Express</strong>, <strong>Apollo</strong>,{" "}
-          <strong>FastAPI</strong>, and <strong>Spring Boot</strong>. I&lsquo;m
-          experienced with <strong>WebRTC</strong> and{" "}
+          frameworks like <strong>Express</strong>, <strong>Apollo</strong>,
+          and <strong>FastAPI</strong>. I&lsquo;m experienced with{" "}
+          <strong>WebRTC</strong> and{" "}
           <strong>Websockets</strong> for real-time applications. 🌐
         </p>
 
         <p>
-          In the realm of <b className="text-yellow-600">machine learning</b>,
-          I&lsquo;m proficient with frameworks like <strong>PyTorch</strong> and
-          data analysis tools such as <strong>Pandas</strong>. This expertise
-          allows me to integrate AI capabilities into applications and derive
-          insights from complex datasets. 🤖
+          In <b className="text-yellow-600">AI and MLOps</b>, I work on the
+          platform around LLMs: <strong>RAG</strong> pipelines with chunking,
+          hybrid search, and reranking; automated <strong>evals</strong> (RAGAS,
+          Langfuse) as a CI quality gate; <strong>LLM observability</strong> and
+          tracing; <strong>self-hosted inference</strong> with vLLM alongside
+          hosted models like Gemini; vector search with <strong>pgvector</strong>{" "}
+          and <strong>Qdrant</strong>; and <strong>tool-calling agents</strong>{" "}
+          built with LangGraph, the Claude Agent SDK, and MCP. I focus on
+          reliability and cost, not demos. 🤖
         </p>
 
         <p>

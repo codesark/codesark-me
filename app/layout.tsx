@@ -27,11 +27,11 @@ export const metadata: Metadata = {
     template: "%s | Savinay Kumar",
   },
   description:
-    "Senior Software Engineer & Team Lead. Full-stack, ML, scalable systems. Building impact with technology.",
+    "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted LLM inference, automated evals, and agents on Go, Kubernetes, and Terraform.",
   openGraph: {
     title: "Savinay Kumar | codesark",
     description:
-      "Senior Software Engineer & Team Lead. Full-stack, ML, scalable systems.",
+      "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted inference, evals, and agents on Go, Kubernetes, and Terraform.",
     url: "https://codesark.me",
     siteName: "Savinay Kumar",
     images: [
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     creator: "@codesark",
     title: "Savinay Kumar | codesark",
     description:
-      "Senior Software Engineer & Team Lead. Full-stack, ML, scalable systems.",
+      "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted inference, evals, and agents on Go, Kubernetes, and Terraform.",
   },
 };
 

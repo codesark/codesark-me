@@ -10,8 +10,8 @@ export interface IProjectsProps {}
 const projects = [
   {
     title: "ViHi",
-    description: "Video-first gig platform: post a short video of your problem, get AI-matched professionals, compare bids and hire—or earn as a pro. Fair subscription model.",
-    technologies: ["Go (Golang)", "Redis", "PostgreSQL", "Kafka", "ConnectRPC", "gRPC", "Flutter", "Dart", "PyTorch", "TensorFlow", "OpenCV"],
+    description: "Video-first services platform: post a short video of your problem, get AI-matched professionals, compare bids, and hire. Built on 15+ event-driven Go microservices on Kubernetes with RAG, self-hosted inference, evals, and tool-calling agents.",
+    technologies: ["Go (Golang)", "Kubernetes", "Terraform", "Redis", "PostgreSQL", "pgvector", "Kafka", "NATS", "ConnectRPC", "gRPC", "Flutter", "Dart", "RAG", "vLLM", "LangGraph", "MCP", "Gemini"],
     url: "https://neosenth.com",
     github: "",
     images: ["image1.png", "image2.png"],

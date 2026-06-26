@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="w-full border-t border-slate-700/50 py-6 mt-auto">
       <div className="w-full max-w-screen-xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-sm text-gray-500">
-          Building with impact · Savinay Kumar · codesark
+          Building backend and AI platforms · Savinay Kumar · codesark
         </p>
         <nav className="flex gap-6 text-sm text-gray-500">
           {links.map(({ label, href }) => (

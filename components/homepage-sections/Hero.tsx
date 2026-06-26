@@ -66,6 +66,33 @@ export default function Hero(props: IHeroProps) {
         <TypewriterName />
       </div>
       <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="pt-4 flex flex-col items-center gap-3 px-5 text-center"
+      >
+        <p className="text-lg lg:text-xl text-gray-300">
+          I build backend platforms and the AI that runs on them.
+        </p>
+        <p className="text-sm text-gray-500 max-w-xl">
+          RAG, self-hosted inference, automated evals, and agents on Go,
+          Kubernetes, and Terraform.
+        </p>
+        <div className="flex items-center gap-3 flex-wrap justify-center">
+          <span className="text-xs px-3 py-1 rounded-full border border-slate-700 text-gray-400">
+            Open to AI-platform · Platform / Backend · FDE roles
+          </span>
+          <a
+            href="/Savinay_Kumar_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs px-3 py-1 rounded-full border border-slate-700 text-gray-300 hover:bg-zinc-950 transition"
+          >
+            Resume
+          </a>
+        </div>
+      </motion.div>
+      <motion.div
         initial={{ y: 100, opacity: 0, scale: 1 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
