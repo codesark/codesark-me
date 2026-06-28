@@ -31,9 +31,10 @@ export function AboutCard() {
           <strong>Kubernetes</strong> (GKE), multi-cloud{" "}
           <strong>Terraform</strong> across GCP, AWS, and Cloudflare, with{" "}
           <strong>pgvector</strong> and <strong>Qdrant</strong> for retrieval and
-          a full observability stack. At a previous startup we were recognized by
-          India&apos;s Finance Minister and built real-time systems that ingest and
-          process <em>high-volume vehicle telemetry at fleet scale</em>.
+          a full observability stack. Earlier, an ed-tech startup I co-founded
+          earned recognition from India&apos;s Finance Minister, and at Zeliot I
+          built real-time systems that process{" "}
+          <em>high-volume vehicle telemetry at fleet scale</em>.
         </p>
 
         <p>

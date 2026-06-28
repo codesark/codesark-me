@@ -29,6 +29,10 @@ export function personSchema() {
       name: siteData.worksFor.name,
       url: siteData.worksFor.url,
     },
+    alumniOf: {
+      "@type": "CollegeOrUniversity",
+      name: "Indian Institute of Information Technology (IIIT) Una",
+    },
     knowsAbout: [...siteData.knowsAbout],
     sameAs: [
       siteData.socials.x,

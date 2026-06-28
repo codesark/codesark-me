@@ -100,6 +100,7 @@ export const skillGroups: SkillGroup[] = [
       { name: "Docker", icon: DockerOriginal, description: "Packages and runs apps in containers." },
       { name: "Terraform", icon: TerraformOriginal, description: "Infrastructure-as-code across GCP, AWS, and Cloudflare." },
       { name: "Helm", icon: HelmOriginal, description: "Package manager for Kubernetes deployments." },
+      { name: "GitOps (FluxCD)", mono: "Fx", tint: "199 89% 55%", description: "Declarative, Git-driven continuous delivery to Kubernetes with FluxCD." },
       { name: "GCP", icon: GooglecloudOriginal, description: "Google Cloud, including GKE." },
       { name: "AWS", icon: AmazonwebservicesOriginalWordmark, description: "Amazon Web Services cloud platform." },
       { name: "Cloudflare", icon: CloudflareOriginal, description: "Edge networking, DNS, and Workers." },

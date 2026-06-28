@@ -132,7 +132,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="hidden lg:block justify-self-center"
+          className="order-first lg:order-none justify-self-center mb-2 lg:mb-0"
         >
           <div className="relative">
             <div
@@ -142,11 +142,11 @@ export default function Hero() {
             <div className="relative rounded-full p-[3px] bg-gradient-to-tr from-primary/70 via-primary/20 to-transparent">
               <Image
                 src="/profile-pic.png"
-                alt="Portrait of Savinay Kumar, Senior Software Engineer & Tech Lead"
+                alt="Portrait of Savinay Kumar, Senior Software Engineer & Technical Lead"
                 width={300}
                 height={300}
                 priority
-                className="rounded-full bg-background object-cover"
+                className="size-36 sm:size-44 lg:size-[300px] rounded-full bg-background object-cover"
               />
             </div>
           </div>

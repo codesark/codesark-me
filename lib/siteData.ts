@@ -11,7 +11,7 @@ export const siteData = {
   tagline: "I build backend platforms and the AI that runs on them.",
   summary:
     "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted LLM inference, automated evals, and tool-calling agents on Go, Kubernetes, and Terraform.",
-  availability: "Open to AI-platform · Platform / Backend · Forward-Deployed roles",
+  availability: "Open to AI-platform, Platform / Backend & Forward-Deployed roles · Remote or relocation",
   resume: "/Savinay_Kumar_Resume.pdf",
   ogImage: "/savinay-wall.jpg",
   worksFor: {

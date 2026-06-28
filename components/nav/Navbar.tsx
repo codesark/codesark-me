@@ -2,12 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteData } from "@/lib/siteData";
 
 const sections = [
   { name: "About", id: "about" },
+  { name: "Experience", id: "experience" },
   { name: "Skills", id: "skills" },
   { name: "Projects", id: "projects" },
   { name: "Blog", id: "blog" },
@@ -58,16 +60,20 @@ export default function Navbar() {
           className="group flex items-center gap-2.5"
           aria-label="Savinay Kumar home"
         >
-          <span className="grid place-items-center size-8 rounded-md bg-primary text-primary-foreground font-display font-bold text-sm">
-            SK
-          </span>
+          <Image
+            src="/profile-pic.png"
+            alt="Savinay Kumar"
+            width={32}
+            height={32}
+            className="size-8 rounded-full object-cover ring-1 ring-slate-700 group-hover:ring-primary/60 transition"
+          />
           <span className="font-mono text-sm text-gray-200 group-hover:text-primary transition-colors">
             codesark
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-1">
           {sections.map((s) => (
             <Link
               key={s.id}
@@ -83,7 +89,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <a
             href={siteData.resume}
             target="_blank"
@@ -105,7 +111,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="md:hidden grid place-items-center size-10 rounded-md border border-slate-800 text-gray-200"
+          className="lg:hidden grid place-items-center size-10 rounded-md border border-slate-800 text-gray-200"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
@@ -121,7 +127,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-background/95 backdrop-blur-md border-b border-slate-800"
+            className="lg:hidden overflow-hidden bg-background/95 backdrop-blur-md border-b border-slate-800"
           >
             <div className="px-5 py-4 flex flex-col gap-1">
               {sections.map((s) => (

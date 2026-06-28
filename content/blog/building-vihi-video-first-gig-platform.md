@@ -1,11 +1,11 @@
 ---
 title: "Building ViHi: A Video-First Gig Platform"
 date: "2026-02-08"
-excerpt: "Why we're betting on video and AI to reimagine how people get help and find work—and how we're building it with Go, Flutter, and ML at Neosenth."
+excerpt: "Why we're betting on video and AI to reimagine how people get help and find work, and how we're building it with Go, Flutter, and ML at Neosenth."
 slug: "building-vihi-video-first-gig-platform"
 ---
 
-At **Neosenth**, we're building **ViHi**: a video-first gig platform where you post a short video of your problem, get **AI-matched professionals**, compare bids, and hire—or earn as a pro. This post is about why we chose this direction and how we're building it with **scalable systems**, **video**, and **AI**.
+At **Neosenth**, we're building **ViHi**: a video-first gig platform where you post a short video of your problem, get **AI-matched professionals**, compare bids, and hire, or earn as a pro. This post is about why we chose this direction and how we're building it with **scalable systems**, **video**, and **AI**.
 
 ## Why video-first?
 
@@ -44,7 +44,7 @@ Below, the tech choices that make this possible.
 
 ## Architecture and tech stack
 
-My background is in **fleet tracking**, **real-time analytics**, and **AI-powered products**—systems that handle *millions of records per minute*. For ViHi we needed:
+My background is in **fleet tracking**, **real-time analytics**, and **AI-powered products**: systems that handle *millions of records per minute*. For ViHi we needed:
 
 - **Low-latency APIs** and real-time updates
 - **Reliable ingestion** for video metadata and events
@@ -100,8 +100,8 @@ We’re launching with a **subscription** model so pros aren’t nickel-and-dime
 
 If you’re interested in **backing**, **partnering**, or just following along, I’d love to connect. You can reach out via [codesark.me](https://codesark.me) or [Neosenth](https://neosenth.com).
 
-![Savinay Kumar — Building ViHi at Neosenth](/savinay-wall.jpg)
+![Savinay Kumar, Building ViHi at Neosenth](/savinay-wall.jpg)
 
 ---
 
-*Building with impact — Savinay Kumar, founder of Neosenth.*
+*Building with impact. Savinay Kumar, founder of Neosenth.*

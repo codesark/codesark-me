@@ -7,7 +7,7 @@ import FadeInWhenVisible from "../animation/FadeInWhenVisible";
 import AboutCard from "../about/AboutCard";
 
 const glance = [
-  { icon: Briefcase, label: "Role", value: "Senior Software Engineer & Tech Lead" },
+  { icon: Briefcase, label: "Role", value: "Senior Software Engineer & Technical Lead" },
   { icon: Compass, label: "Focus", value: "AI platforms & event-driven backends" },
   { icon: Rocket, label: "Currently", value: "Co-founder at Neosenth, building ViHi" },
   { icon: MapPin, label: "Based in", value: "Bengaluru, India" },

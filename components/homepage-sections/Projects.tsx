@@ -22,7 +22,7 @@ const projects = [
   },
   {
     title: "SML Saarthi",
-    category: "Enterprise · Fleet telematics",
+    category: "Built at Zeliot · Fleet telematics",
     description:
       "Tracking, monitoring, alerting, and analytics for SML ISUZU: fleet optimization for buses and trucks, ingesting and processing high-volume vehicle telemetry at fleet scale.",
     technologies: [
@@ -34,9 +34,9 @@ const projects = [
   },
   {
     title: "Avarta Life",
-    category: "AI · Sustainability",
+    category: "Side project · Google Gemini AI Challenge",
     description:
-      "Smart recycling app: a Gemini-powered assistant that helps people recycle and reuse waste materials, with location-aware guidance.",
+      "Hackathon project for the Google Gemini AI Challenge: a smart-recycling assistant that helps people recycle and reuse waste materials, with location-aware guidance.",
     technologies: [
       "Gemini AI", "Next.js", "Flutter", "FastAPI", "React", "Tailwind CSS", "Google Maps", "RAG", "Firebase",
     ],

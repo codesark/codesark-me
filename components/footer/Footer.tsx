@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { siteData } from "@/lib/siteData";
 
 const nav = [
@@ -22,9 +23,13 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
-              <span className="grid size-8 place-items-center rounded-md bg-primary text-primary-foreground font-display font-bold text-sm">
-                SK
-              </span>
+              <Image
+                src="/profile-pic.png"
+                alt="Savinay Kumar"
+                width={32}
+                height={32}
+                className="size-8 rounded-full object-cover ring-1 ring-slate-700"
+              />
               <span className="font-mono text-sm text-gray-200">codesark</span>
             </div>
             <p className="mt-4 text-sm text-gray-500 leading-relaxed">

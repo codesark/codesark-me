@@ -16,7 +16,13 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const posts = getAllPosts();
+  // Only the homepage Blog teaser needs slug/title/excerpt/date. Strip the full
+  // post body so it isn't serialized into the homepage payload (smaller HTML,
+  // and post content stays on its own /blog/[slug] page).
+  const posts = getAllPosts().map(({ content, ...meta }) => ({
+    ...meta,
+    content: "",
+  }));
   return (
     <main>
       <Homepage posts={posts} />

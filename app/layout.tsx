@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     siteData.name,
     siteData.handle,
     "Senior Software Engineer",
-    "Tech Lead",
+    "Technical Lead",
     "Backend Engineer",
     "AI Platform Engineer",
     "Go developer",

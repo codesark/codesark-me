@@ -3,6 +3,7 @@
 import About from "@/components/homepage-sections/About";
 import Blog from "@/components/homepage-sections/Blog";
 import Hero from "@/components/homepage-sections/Hero";
+import Experience from "@/components/homepage-sections/Experience";
 import Projects from "@/components/homepage-sections/Projects";
 import Skills from "@/components/homepage-sections/Skills";
 import Contact from "@/components/homepage-sections/Contact";
@@ -34,6 +35,7 @@ export default function Homepage(props: IHomepageProps) {
     <>
       <Hero />
       <About />
+      <Experience />
       <Skills />
       <Projects />
       <Blog posts={props.posts ?? []} />
