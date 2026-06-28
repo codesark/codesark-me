@@ -18,7 +18,7 @@ export const metadata = {
 export default async function Home() {
   const posts = getAllPosts();
   return (
-    <main className="h-screen">
+    <main>
       <Homepage posts={posts} />
     </main>
   );

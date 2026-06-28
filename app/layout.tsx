@@ -1,19 +1,53 @@
 import type { Metadata } from "next";
 import { Inter, Poppins, Roboto_Mono } from "next/font/google";
 import "./globals.css";
-import TopTag from "@/components/toptag/TopTag";
+import Navbar from "@/components/nav/Navbar";
 import Background from "@/components/background/Background";
+import JsonLd from "@/components/seo/JsonLd";
+import { siteData } from "@/lib/siteData";
+import {
+  personSchema,
+  websiteSchema,
+  profilePageSchema,
+} from "@/lib/jsonLd";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
-  weight: "400",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-poppins",
 });
-const robotoMono = Roboto_Mono({ subsets: ["latin"] });
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  variable: "--font-roboto-mono",
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://codesark.me"),
+  metadataBase: new URL(siteData.url),
+  alternates: {
+    canonical: "/",
+  },
+  applicationName: `${siteData.name} | ${siteData.handle}`,
+  authors: [{ name: siteData.name, url: siteData.url }],
+  creator: siteData.name,
+  publisher: siteData.name,
+  category: "technology",
+  keywords: [
+    siteData.name,
+    siteData.handle,
+    "Senior Software Engineer",
+    "Tech Lead",
+    "Backend Engineer",
+    "AI Platform Engineer",
+    "Go developer",
+    "Kubernetes",
+    "RAG",
+    "LLM inference",
+    "vLLM",
+    "LangGraph",
+    "Bengaluru",
+    ...siteData.knowsAbout,
+  ],
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -23,33 +57,25 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   title: {
-    default: "Savinay Kumar | codesark",
-    template: "%s | Savinay Kumar",
+    default: `${siteData.name} | ${siteData.handle} · ${siteData.role}`,
+    template: `%s | ${siteData.name}`,
   },
-  description:
-    "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted LLM inference, automated evals, and agents on Go, Kubernetes, and Terraform.",
+  description: siteData.summary,
   openGraph: {
-    title: "Savinay Kumar | codesark",
-    description:
-      "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted inference, evals, and agents on Go, Kubernetes, and Terraform.",
-    url: "https://codesark.me",
-    siteName: "Savinay Kumar",
-    images: [
-      {
-        url: "/savinay-wall.jpg",
-        width: 1200,
-        height: 630,
-      },
-    ],
-    locale: "en-US",
+    title: `${siteData.name} | ${siteData.handle}`,
+    description: siteData.summary,
+    url: siteData.url,
+    siteName: siteData.name,
+    images: [{ url: siteData.ogImage, width: 1200, height: 630, alt: siteData.name }],
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     creator: "@codesark",
-    title: "Savinay Kumar | codesark",
-    description:
-      "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted inference, evals, and agents on Go, Kubernetes, and Terraform.",
+    title: `${siteData.name} | ${siteData.handle}`,
+    description: siteData.summary,
+    images: [siteData.ogImage],
   },
 };
 
@@ -60,9 +86,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${robotoMono.className} h-screen`}>
+      <body
+        className={`${robotoMono.variable} ${poppins.variable} ${inter.variable} font-sans min-h-screen bg-background text-foreground antialiased`}
+      >
+        <JsonLd
+          data={[personSchema(), websiteSchema(), profilePageSchema()]}
+        />
         <Background count={10} speed={0.1} />
-        <TopTag />
+        <Navbar />
         {children}
       </body>
     </html>

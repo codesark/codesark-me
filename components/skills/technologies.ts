@@ -1,224 +1,123 @@
+import type { ComponentType } from "react";
+
+// Real brand icons (devicons): only used where an accurate logo exists.
+import GoOriginal from "devicons-react/lib/icons/GoOriginal";
+import PythonOriginal from "devicons-react/lib/icons/PythonOriginal";
 import TypescriptOriginal from "devicons-react/lib/icons/TypescriptOriginal";
 import JavascriptOriginal from "devicons-react/lib/icons/JavascriptOriginal";
-import ReactOriginal from "devicons-react/lib/icons/ReactOriginal";
 import NodejsOriginal from "devicons-react/lib/icons/NodejsOriginal";
-import PythonOriginal from "devicons-react/lib/icons/PythonOriginal";
 import FastapiOriginal from "devicons-react/lib/icons/FastapiOriginal";
+import ReactOriginal from "devicons-react/lib/icons/ReactOriginal";
 import NextjsOriginal from "devicons-react/lib/icons/NextjsOriginal";
 import TailwindcssOriginal from "devicons-react/lib/icons/TailwindcssOriginal";
-import GoOriginal from "devicons-react/lib/icons/GoOriginal";
+import PostgresqlOriginal from "devicons-react/lib/icons/PostgresqlOriginal";
+import RedisOriginal from "devicons-react/lib/icons/RedisOriginal";
+import GraphqlPlain from "devicons-react/lib/icons/GraphqlPlain";
+import GrpcOriginal from "devicons-react/lib/icons/GrpcOriginal";
+import ApachekafkaOriginal from "devicons-react/lib/icons/ApachekafkaOriginal";
+import NatsOriginal from "devicons-react/lib/icons/NatsOriginal";
 import DockerOriginal from "devicons-react/lib/icons/DockerOriginal";
 import KubernetesOriginal from "devicons-react/lib/icons/KubernetesOriginal";
-import GraphqlPlain from "devicons-react/lib/icons/GraphqlPlain";
-import PostgresqlOriginal from "devicons-react/lib/icons/PostgresqlOriginal";
-import GitOriginal from "devicons-react/lib/icons/GitOriginal";
+import TerraformOriginal from "devicons-react/lib/icons/TerraformOriginal";
+import HelmOriginal from "devicons-react/lib/icons/HelmOriginal";
 import AmazonwebservicesOriginalWordmark from "devicons-react/lib/icons/AmazonwebservicesOriginalWordmark";
 import GooglecloudOriginal from "devicons-react/lib/icons/GooglecloudOriginal";
-import RedisOriginal from "devicons-react/lib/icons/RedisOriginal";
+import CloudflareOriginal from "devicons-react/lib/icons/CloudflareOriginal";
 import LinuxOriginal from "devicons-react/lib/icons/LinuxOriginal";
-import JenkinsOriginal from "devicons-react/lib/icons/JenkinsOriginal";
-import FlutterOriginal from "devicons-react/lib/icons/FlutterOriginal";
-import ApachekafkaOriginal from "devicons-react/lib/icons/ApachekafkaOriginal";
-import GrpcOriginal from "devicons-react/lib/icons/GrpcOriginal";
-import DartOriginal from "devicons-react/lib/icons/DartOriginal";
+import GitOriginal from "devicons-react/lib/icons/GitOriginal";
+import GithubactionsOriginal from "devicons-react/lib/icons/GithubactionsOriginal";
+import GrafanaOriginal from "devicons-react/lib/icons/GrafanaOriginal";
 import PytorchOriginal from "devicons-react/lib/icons/PytorchOriginal";
+import FlutterOriginal from "devicons-react/lib/icons/FlutterOriginal";
+import DartOriginal from "devicons-react/lib/icons/DartOriginal";
 
-export const technologies = [
+export type DeviconType = ComponentType<{ size?: number; className?: string }>;
+
+export interface Tech {
+  name: string;
+  description: string;
+  /** Accurate brand icon. Omit when no real logo exists; a monogram is shown instead. */
+  icon?: DeviconType;
+  /** Monogram label used when there's no brand icon (keeps the grid consistent, never a wrong logo). */
+  mono?: string;
+  /** Tint (HSL hue, sat%, light%) for the monogram chip. */
+  tint?: string;
+}
+
+export interface SkillGroup {
+  category: string;
+  blurb: string;
+  items: Tech[];
+}
+
+export const skillGroups: SkillGroup[] = [
   {
-    name: "Go (Golang)",
-    icon: GoOriginal,
-    description:
-      "Go is a statically typed, compiled language I use for event-driven microservices.",
+    category: "Languages",
+    blurb: "Day-to-day for services, tooling, and AI pipelines.",
+    items: [
+      { name: "Go", icon: GoOriginal, description: "Primary language for event-driven microservices." },
+      { name: "Python", icon: PythonOriginal, description: "AI services, data pipelines, and tooling." },
+      { name: "TypeScript", icon: TypescriptOriginal, description: "Type-safe services and front-ends." },
+      { name: "JavaScript", icon: JavascriptOriginal, description: "The language of the web." },
+      { name: "Node.js", icon: NodejsOriginal, description: "Runtime for scalable server-side apps." },
+    ],
   },
   {
-    name: "Python",
-    icon: PythonOriginal,
-    description:
-      "Python powers my AI services, data pipelines, and tooling.",
+    category: "AI / LLM Platform",
+    blurb: "The platform and operations layer around LLMs, built for reliability and cost, not demos.",
+    items: [
+      { name: "RAG", mono: "RAG", tint: "262 80% 66%", description: "Retrieval-Augmented Generation: chunking, hybrid search, reranking." },
+      { name: "vLLM", mono: "vL", tint: "200 90% 60%", description: "High-throughput engine for self-hosted LLM inference." },
+      { name: "LangGraph", mono: "LG", tint: "150 60% 55%", description: "Stateful, multi-step tool-calling agents." },
+      { name: "MCP", mono: "MCP", tint: "24 90% 60%", description: "Model Context Protocol: connects agents to tools and data." },
+      { name: "Evals (RAGAS · Langfuse)", mono: "Ev", tint: "330 75% 65%", description: "Automated LLM evaluation and tracing, run as a CI quality gate." },
+      { name: "pgvector", mono: "pgv", tint: "204 70% 53%", description: "Vector similarity search inside PostgreSQL." },
+      { name: "Qdrant", mono: "Qd", tint: "350 80% 62%", description: "Vector database for similarity search and retrieval." },
+      { name: "Gemini", mono: "Gem", tint: "217 89% 61%", description: "Google's multimodal models, used alongside self-hosted inference." },
+      { name: "PyTorch", icon: PytorchOriginal, description: "Deep-learning framework underpinning model work." },
+    ],
   },
   {
-    name: "TypeScript",
-    icon: TypescriptOriginal,
-    description:
-      "TypeScript adds static types to JavaScript for safer services and UIs.",
+    category: "Backend & Data",
+    blurb: "Event-driven services, APIs, durable workflows, and storage.",
+    items: [
+      { name: "gRPC", icon: GrpcOriginal, description: "High-performance, Protobuf-based RPC." },
+      { name: "ConnectRPC", mono: "cR", tint: "210 9% 60%", description: "Simple, Protobuf-based RPC over HTTP." },
+      { name: "GraphQL", icon: GraphqlPlain, description: "Query language and runtime for APIs." },
+      { name: "FastAPI", icon: FastapiOriginal, description: "High-performance Python API framework." },
+      { name: "Kafka", icon: ApachekafkaOriginal, description: "Distributed event-streaming platform." },
+      { name: "NATS", icon: NatsOriginal, description: "Lightweight, high-performance eventing (JetStream)." },
+      { name: "Temporal", mono: "Tp", tint: "0 0% 75%", description: "Durable, fault-tolerant workflow orchestration." },
+      { name: "PostgreSQL", icon: PostgresqlOriginal, description: "Relational database (with PostGIS and pgvector)." },
+      { name: "Redis", icon: RedisOriginal, description: "In-memory store for caching and queues." },
+    ],
   },
   {
-    name: "JavaScript",
-    icon: JavascriptOriginal,
-    description: "JavaScript is the language of the web.",
+    category: "Cloud & Infra",
+    blurb: "Multi-cloud, containerized, and observable by default.",
+    items: [
+      { name: "Kubernetes", icon: KubernetesOriginal, description: "Container orchestration (GKE in production)." },
+      { name: "Docker", icon: DockerOriginal, description: "Packages and runs apps in containers." },
+      { name: "Terraform", icon: TerraformOriginal, description: "Infrastructure-as-code across GCP, AWS, and Cloudflare." },
+      { name: "Helm", icon: HelmOriginal, description: "Package manager for Kubernetes deployments." },
+      { name: "GCP", icon: GooglecloudOriginal, description: "Google Cloud, including GKE." },
+      { name: "AWS", icon: AmazonwebservicesOriginalWordmark, description: "Amazon Web Services cloud platform." },
+      { name: "Cloudflare", icon: CloudflareOriginal, description: "Edge networking, DNS, and Workers." },
+      { name: "CI/CD", icon: GithubactionsOriginal, description: "Continuous delivery with GitHub Actions." },
+      { name: "Observability", icon: GrafanaOriginal, description: "Grafana, Loki, and VictoriaMetrics for metrics, logs, and dashboards." },
+      { name: "Linux", icon: LinuxOriginal, description: "Unix-like operating system foundation." },
+      { name: "Git", icon: GitOriginal, description: "Distributed version control." },
+    ],
   },
   {
-    name: "Node.js",
-    icon: NodejsOriginal,
-    description:
-      "Node.js is a runtime for building scalable server-side applications.",
-  },
-  {
-    name: "FastAPI",
-    icon: FastapiOriginal,
-    description: "FastAPI is a high-performance Python framework for building APIs.",
-  },
-  {
-    name: "React",
-    icon: ReactOriginal,
-    description: "React is a JavaScript library for building user interfaces.",
-  },
-  {
-    name: "Next.js",
-    icon: NextjsOriginal,
-    description:
-      "Next.js is a React framework for server-side rendering and static sites.",
-  },
-  {
-    name: "Tailwind CSS",
-    icon: TailwindcssOriginal,
-    description:
-      "Tailwind CSS is a utility-first CSS framework for building UIs fast.",
-  },
-  {
-    name: "PostgreSQL",
-    icon: PostgresqlOriginal,
-    description:
-      "PostgreSQL is an open-source relational database (with PostGIS and pgvector).",
-  },
-  {
-    name: "pgvector",
-    icon: PostgresqlOriginal,
-    description: "pgvector adds vector similarity search to PostgreSQL.",
-  },
-  {
-    name: "Redis",
-    icon: RedisOriginal,
-    description: "Redis is an in-memory key-value store for caching and queues.",
-  },
-  {
-    name: "GraphQL",
-    icon: GraphqlPlain,
-    description: "GraphQL is a query language and runtime for APIs.",
-  },
-  {
-    name: "gRPC",
-    icon: GrpcOriginal,
-    description: "gRPC is a high-performance, Protobuf-based RPC framework.",
-  },
-  {
-    name: "ConnectRPC",
-    icon: GrpcOriginal,
-    description: "ConnectRPC is a simple, Protobuf-based RPC framework.",
-  },
-  {
-    name: "Kafka",
-    icon: ApachekafkaOriginal,
-    description: "Apache Kafka is a distributed event-streaming platform.",
-  },
-  {
-    name: "NATS",
-    icon: ApachekafkaOriginal,
-    description: "NATS JetStream is a lightweight, high-performance eventing system.",
-  },
-  {
-    name: "Docker",
-    icon: DockerOriginal,
-    description:
-      "Docker packages and runs applications in containers.",
-  },
-  {
-    name: "Kubernetes",
-    icon: KubernetesOriginal,
-    description:
-      "Kubernetes automates deployment, scaling, and management of containers.",
-  },
-  {
-    name: "Terraform",
-    icon: KubernetesOriginal,
-    description:
-      "Terraform is infrastructure-as-code for provisioning multi-cloud infrastructure.",
-  },
-  {
-    name: "Temporal",
-    icon: GoOriginal,
-    description:
-      "Temporal orchestrates durable, fault-tolerant workflows (used for network automation at Lumen).",
-  },
-  {
-    name: "Observability (Grafana, Loki)",
-    icon: LinuxOriginal,
-    description:
-      "Grafana, Loki, and VictoriaMetrics for metrics, logs, and dashboards across the platform.",
-  },
-  {
-    name: "AWS",
-    icon: AmazonwebservicesOriginalWordmark,
-    description: "Amazon Web Services (AWS) is a comprehensive cloud platform.",
-  },
-  {
-    name: "Google Cloud",
-    icon: GooglecloudOriginal,
-    description: "Google Cloud Platform (GCP), including GKE for Kubernetes.",
-  },
-  {
-    name: "Linux",
-    icon: LinuxOriginal,
-    description: "Linux is a Unix-like operating system.",
-  },
-  {
-    name: "Git",
-    icon: GitOriginal,
-    description: "Git is a distributed version control system.",
-  },
-  {
-    name: "CI/CD",
-    icon: JenkinsOriginal,
-    description: "Continuous integration and delivery with GitHub Actions and Jenkins.",
-  },
-  {
-    name: "RAG",
-    icon: PytorchOriginal,
-    description:
-      "Retrieval-Augmented Generation grounds LLM responses in retrieved context.",
-  },
-  {
-    name: "vLLM",
-    icon: PytorchOriginal,
-    description:
-      "vLLM is a high-throughput inference and serving engine for self-hosted LLMs.",
-  },
-  {
-    name: "LangGraph",
-    icon: PytorchOriginal,
-    description:
-      "LangGraph builds stateful, multi-step tool-calling agents.",
-  },
-  {
-    name: "MCP",
-    icon: GrpcOriginal,
-    description:
-      "Model Context Protocol connects agents to tools and data.",
-  },
-  {
-    name: "Qdrant",
-    icon: RedisOriginal,
-    description: "Qdrant is a vector database for similarity search and retrieval.",
-  },
-  {
-    name: "Evals (RAGAS, Langfuse)",
-    icon: PytorchOriginal,
-    description:
-      "Automated LLM evaluation and observability, run as a CI quality gate.",
-  },
-  {
-    name: "Gemini",
-    icon: GooglecloudOriginal,
-    description: "Gemini is Google's family of multimodal generative AI models.",
-  },
-  {
-    name: "Flutter",
-    icon: FlutterOriginal,
-    description: "Flutter is a cross-platform mobile app framework.",
-  },
-  {
-    name: "Dart",
-    icon: DartOriginal,
-    description: "Dart is the language behind Flutter.",
+    category: "Mobile",
+    blurb: "Cross-platform clients for shipped products.",
+    items: [
+      { name: "Flutter", icon: FlutterOriginal, description: "Cross-platform mobile app framework." },
+      { name: "Dart", icon: DartOriginal, description: "The language behind Flutter." },
+    ],
   },
 ];
+
+// Flat lookup kept for components that reference a technology by name (e.g. ProjectCard).
+export const technologies: Tech[] = skillGroups.flatMap((g) => g.items);

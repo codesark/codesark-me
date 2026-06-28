@@ -1,11 +1,12 @@
 "use client";
+
 import About from "@/components/homepage-sections/About";
 import Blog from "@/components/homepage-sections/Blog";
 import Hero from "@/components/homepage-sections/Hero";
 import Projects from "@/components/homepage-sections/Projects";
 import Skills from "@/components/homepage-sections/Skills";
+import Contact from "@/components/homepage-sections/Contact";
 import Footer from "@/components/footer/Footer";
-import FadeInWhenVisible from "@/components/animation/FadeInWhenVisible";
 import type { BlogPost } from "@/lib/blog";
 import * as React from "react";
 
@@ -14,55 +15,30 @@ export interface IHomepageProps {
 }
 
 export default function Homepage(props: IHomepageProps) {
-  const [isHydrated, setIsHydrated] = React.useState(false);
-
+  // Smooth-scroll to a hash target when landing with one (e.g. /#blog from a post).
+  // This is a progressive enhancement only; it never gates rendering, so all
+  // section content is server-rendered for search engines and LLM crawlers.
   React.useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  // Scroll to hash target when landing with a hash (e.g. /#blog from "Back to Blog")
-  React.useEffect(() => {
-    if (!isHydrated) return;
-    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
+    const hash =
+      typeof window !== "undefined" ? window.location.hash.slice(1) : "";
     if (!hash) return;
     const timer = window.setTimeout(() => {
-      const el = document.getElementById(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      document
+        .getElementById(hash)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
     return () => window.clearTimeout(timer);
-  }, [isHydrated]);
+  }, []);
 
-  return !isHydrated ? (
-    <div className="w-full h-full flex justify-center items-center">
-      <div className="w-20 h-20 animate-spin rounded-full border-4 border-solid border-slate-500 border-t-transparent">
-        <span className="sr-only">Loading...</span>
-      </div>
-    </div>
-  ) : (
+  return (
     <>
-      <section id="hero" className="snap-start">
-        <Hero />
-      </section>
-      <section id="about" className="snap-start">
-        <About />
-      </section>
-
-      <section id="skills" className="snap-start">
-        <Skills />
-      </section>
-
-      <section id="projects" className="snap-start">
-        <Projects />
-      </section>
-
-      <section id="blog" className="snap-start">
-        <Blog posts={props.posts ?? []} />
-      </section>
-      <FadeInWhenVisible delay={0.1}>
-        <Footer />
-      </FadeInWhenVisible>
+      <Hero />
+      <About />
+      <Skills />
+      <Projects />
+      <Blog posts={props.posts ?? []} />
+      <Contact />
+      <Footer />
     </>
   );
 }

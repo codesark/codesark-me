@@ -1,35 +1,56 @@
 "use client";
 
 import * as React from "react";
+import { Briefcase, Compass, MapPin, Sparkles, Rocket, Award } from "lucide-react";
+import Section from "@/components/shared/Section";
 import FadeInWhenVisible from "../animation/FadeInWhenVisible";
-import ContactCard from "../about/ContactCard";
 import AboutCard from "../about/AboutCard";
 
-export interface IAboutProps {}
+const glance = [
+  { icon: Briefcase, label: "Role", value: "Senior Software Engineer & Tech Lead" },
+  { icon: Compass, label: "Focus", value: "AI platforms & event-driven backends" },
+  { icon: Rocket, label: "Currently", value: "Co-founder at Neosenth, building ViHi" },
+  { icon: MapPin, label: "Based in", value: "Bengaluru, India" },
+  { icon: Award, label: "Recognition", value: "Work recognized by India's Finance Minister" },
+  { icon: Sparkles, label: "Open to", value: "AI-platform · Platform / Backend · FDE roles" },
+];
 
-export default function About(props: IAboutProps) {
+export default function About() {
   return (
-    <div className="relative w-full max-w-screen-xl mx-auto flex flex-col justify-center overflow-hidden">
-      <FadeInWhenVisible>
-        <h1 className="text-5xl pt-20 py-10 px-5 leading-snug text-center">
-          <span className="text-gray-500 font-light">About:</span>
-          Who am I?
-        </h1>
-      </FadeInWhenVisible>
-      <hr />
+    <Section
+      id="about"
+      eyebrow="About"
+      title="I build platforms and the AI that runs on them"
+      description="Senior engineer and tech lead who turns messy, real-world requirements into reliable production systems."
+    >
+      <div className="grid lg:grid-cols-[1.6fr_1fr] gap-8 lg:gap-12 items-start">
+        <FadeInWhenVisible>
+          <AboutCard />
+        </FadeInWhenVisible>
 
-      <div className="flex align-items-stretch flex-wrap lg:flex-nowrap gap-4 lg:gap-10 p-5">
-        <div className="w-full lg:w-2/3">
-          <FadeInWhenVisible className="h-full">
-            <AboutCard />
-          </FadeInWhenVisible>
-        </div>
-        <div className="w-full lg:w-1/3">
-          <FadeInWhenVisible>
-            <ContactCard />
-          </FadeInWhenVisible>
-        </div>
+        <FadeInWhenVisible delay={0.1}>
+          <div className="rounded-2xl border border-slate-800 bg-white/[0.02] p-6">
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-gray-400 mb-5">
+              At a glance
+            </h3>
+            <dl className="space-y-5">
+              {glance.map((item) => (
+                <div key={item.label} className="flex gap-3.5">
+                  <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+                    <item.icon className="size-4" aria-hidden />
+                  </span>
+                  <div>
+                    <dt className="text-xs uppercase tracking-wide text-gray-500">
+                      {item.label}
+                    </dt>
+                    <dd className="text-sm text-gray-200 mt-0.5">{item.value}</dd>
+                  </div>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </FadeInWhenVisible>
       </div>
-    </div>
+    </Section>
   );
 }

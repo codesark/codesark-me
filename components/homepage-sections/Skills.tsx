@@ -1,34 +1,28 @@
 "use client";
 
 import * as React from "react";
+import Section from "@/components/shared/Section";
 import FadeInWhenVisible from "../animation/FadeInWhenVisible";
 import SkillCard from "../skills/SkillCard";
 import SkillTagCard from "../skills/SkillTagCard";
 
-export interface ISkillsProps {}
-
-export default function Skills(props: ISkillsProps) {
+export default function Skills() {
   return (
-    <div className="relative w-full max-w-screen-xl mx-auto flex flex-col justify-center overflow-hidden">
-      <FadeInWhenVisible>
-        <h1 className="text-5xl pt-20 py-10 px-5 leading-snug text-center">
-          <span className="text-gray-500 font-light">Skills:</span> What
-          I&apos;m good at?
-        </h1>
-      </FadeInWhenVisible>
-      <hr />
-      <div className="flex align-items-stretch flex-wrap lg:flex-nowrap gap-4 lg:gap-10 p-5">
-        <div className="w-full lg:w-2/3">
-          <FadeInWhenVisible className="h-full">
-            <SkillCard />
-          </FadeInWhenVisible>
-        </div>
-        <div className="w-full lg:w-1/3">
-          <FadeInWhenVisible>
-            <SkillTagCard />
-          </FadeInWhenVisible>
-        </div>
+    <Section
+      id="skills"
+      eyebrow="Skills"
+      title="What I work with"
+      description="Depth in backend platforms and the AI systems that run on them, not a checklist of everything I've touched."
+      className="bg-white/[0.015]"
+    >
+      <div className="grid lg:grid-cols-[1fr_1.5fr] gap-8 lg:gap-12 items-start">
+        <FadeInWhenVisible className="lg:sticky lg:top-24">
+          <SkillCard />
+        </FadeInWhenVisible>
+        <FadeInWhenVisible delay={0.1}>
+          <SkillTagCard />
+        </FadeInWhenVisible>
       </div>
-    </div>
+    </Section>
   );
 }

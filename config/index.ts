@@ -18,7 +18,7 @@ export class Config {
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
     const smtpFrom = process.env.SMTP_FROM;
-    const smtpTo = process.env.SMTP_TO || 'contact@skppd.com';
+    const smtpTo = process.env.SMTP_TO || 'codesark98@gmail.com';
     const smtpSecure = process.env.SMTP_SECURE === 'true';
     const debug = process.env.DEBUG === 'true';
 
