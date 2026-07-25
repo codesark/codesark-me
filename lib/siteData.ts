@@ -5,7 +5,7 @@ export const siteData = {
   name: "Savinay Kumar",
   handle: "codesark",
   url: "https://codesark.me",
-  email: "codesark98@gmail.com",
+  email: "codesark.me@gmail.com",
   role: "Senior Software Engineer & Tech Lead",
   location: "Bengaluru, India",
   tagline: "I build backend platforms and the AI that runs on them.",
