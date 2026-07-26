@@ -92,7 +92,7 @@ export default function RootLayout({
         <JsonLd
           data={[personSchema(), websiteSchema(), profilePageSchema()]}
         />
-        <Background count={10} speed={0.1} />
+        <Background />
         <Navbar />
         {children}
       </body>

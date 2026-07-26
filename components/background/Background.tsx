@@ -3,25 +3,35 @@
 import * as React from "react";
 import "./Background.css";
 
-export interface IBackgroundProps {
-  count: number;
-  speed: number;
-}
-
-export default function Background({ count, speed }: IBackgroundProps) {
+export default function Background() {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
-    window.addEventListener("mousemove", (e) => {
-      ref.current?.style.setProperty("--x", e.clientX + "px");
-      ref.current?.style.setProperty("--y", e.clientY + "px");
-    });
+    // Cursor spotlight only makes sense with a precise pointer.
+    if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    window.addEventListener("touchmove", (e) => {
-      ref.current?.style.setProperty("--x", e.changedTouches[0].clientX + "px");
-      ref.current?.style.setProperty("--y", e.changedTouches[0].clientY + "px");
-    });
+    let raf = 0;
+    let x = 0;
+    let y = 0;
+
+    const flush = () => {
+      raf = 0;
+      ref.current?.style.setProperty("--x", x + "px");
+      ref.current?.style.setProperty("--y", y + "px");
+    };
+
+    const onMove = (e: MouseEvent) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(flush);
+    };
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
-  return <div ref={ref} className="background"></div>;
+  return <div ref={ref} aria-hidden className="background" />;
 }

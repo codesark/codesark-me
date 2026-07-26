@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Briefcase, Compass, MapPin, Sparkles, Rocket, Award } from "lucide-react";
 import Section from "@/components/shared/Section";

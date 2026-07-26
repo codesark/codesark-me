@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Mail, Linkedin, Github, FileText } from "lucide-react";
 import Section from "@/components/shared/Section";

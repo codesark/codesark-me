@@ -1,5 +1,3 @@
-"use client";
-
 import type { Components } from "react-markdown";
 
 const anchorClassName =

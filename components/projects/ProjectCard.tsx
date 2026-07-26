@@ -1,7 +1,4 @@
-"use client";
-
 import * as React from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Github, Star } from "lucide-react";
 import { technologies, type Tech } from "../skills/technologies";
@@ -29,10 +26,8 @@ export default function ProjectCard(props: IProjectCardProps) {
   const overflow = props.technologies.length - shown.length;
 
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ type: "tween", duration: 0.2 }}
-      className={`terminal-card group relative flex h-full flex-col rounded-2xl border bg-white/[0.02] p-6 transition-colors ${
+    <div
+      className={`terminal-card group relative flex h-full flex-col rounded-2xl border bg-white/[0.02] p-6 transition-[transform,border-color] duration-200 hover:-translate-y-1 motion-reduce:transform-none ${
         highlighted
           ? "border-primary/40 hover:border-primary/70"
           : "border-slate-800 hover:border-slate-700"
@@ -105,6 +100,6 @@ export default function ProjectCard(props: IProjectCardProps) {
           </span>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }

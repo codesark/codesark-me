@@ -6,21 +6,50 @@
   background-image: linear-gradient(#3c3c3c33 1px, transparent 1px),
     linear-gradient(to right, #3c3c3c33 1px, transparent 1px);
   background-size: 100px 100px;
-  background-color: #000000;
+  background-color: hsl(var(--background));
+  --x: -400px;
+  --y: -400px;
 }
 
+/* Mouse-following spotlight. Positioned with transform (compositor-only)
+   instead of top/left so pointer moves never trigger layout. */
 .background::before {
   z-index: 1;
   content: "";
   position: absolute;
-  top: var(--y);
-  left: var(--x);
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  transform: translate3d(calc(var(--x) - 150px), calc(var(--y) - 150px), 0);
   border-radius: 50%;
-  overflow: hidden;
   background: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
   backdrop-filter: brightness(400%);
   height: 300px;
   width: 300px;
-  transition: 0.3s, top 0s, left 0s;
+  transition: opacity 0.3s;
+}
+
+@media (pointer: coarse) {
+  .background::before {
+    display: none;
+  }
+}
+
+/* CRT scanlines + faint vignette. Static (no flicker), one composited layer. */
+.background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+      0deg,
+      transparent 0 2px,
+      rgba(0, 0, 0, 0.12) 2px 3px
+    ),
+    radial-gradient(
+      ellipse at center,
+      transparent 60%,
+      rgba(0, 0, 0, 0.35) 100%
+    );
+  opacity: 0.35;
 }
