@@ -7,9 +7,9 @@ export default function SkillCard() {
         <p>
           My core is the <strong>AI operations layer</strong>, built mainly in{" "}
           <strong>Python</strong>: <strong>RAG</strong> pipelines (chunking,
-          hybrid search, reranking), <strong>self-hosted inference</strong> with
-          vLLM alongside hosted models like Gemini, automated{" "}
-          <strong>evals</strong> (RAGAS, Langfuse) wired into CI, LLM tracing,
+          hybrid search, reranking), <strong>self-hosted inference</strong> of
+          open-weight models (Llama, Qwen, Mistral) on vLLM plus hosted Gemini,
+          automated <strong>evals</strong> (RAGAS, Langfuse) wired into CI, LLM tracing,
           and <strong>tool-calling agents</strong> over MCP. I optimize for
           reliability and cost, not demos.
         </p>
