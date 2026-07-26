@@ -81,7 +81,7 @@ export default async function OgImage({
           }}
         >
           <div style={{ display: "flex" }}>
-            {siteData.name} · Senior Software Engineer &amp; Tech Lead
+            {siteData.name} · {siteData.role}
           </div>
           <div style={{ display: "flex", color: "#52525b" }}>{date}</div>
         </div>

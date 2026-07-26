@@ -8,11 +8,11 @@ const projects = [
     title: "ViHi",
     category: "Flagship · Neosenth",
     description:
-      "Video-first services platform: post a short video of your problem, get AI-matched professionals, compare bids, and hire. Built on 15+ event-driven Go microservices on Kubernetes with RAG, self-hosted inference, evals, and tool-calling agents.",
+      "Video-first services platform: post a short video of your problem, get AI-matched professionals, compare bids, and hire. The AI layer is built end to end: RAG on pgvector, Gemini media analysis and liveness, tool-calling agents over MCP, and self-hosted vLLM, running on 15+ event-driven Go microservices on Kubernetes.",
     technologies: [
-      "Go", "Kubernetes", "Terraform", "Redis", "PostgreSQL", "pgvector",
-      "Kafka", "NATS", "ConnectRPC", "gRPC", "Flutter", "Dart", "RAG",
-      "vLLM", "LangGraph", "MCP", "Gemini",
+      "RAG", "vLLM", "MCP", "Gemini", "Python", "pgvector", "Go",
+      "Kubernetes", "NATS", "PostgreSQL", "Redis", "Terraform",
+      "ConnectRPC", "gRPC", "Flutter", "Dart",
     ],
     url: "https://neosenth.com",
     github: "",

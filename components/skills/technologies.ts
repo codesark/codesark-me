@@ -52,29 +52,30 @@ export interface SkillGroup {
 
 export const skillGroups: SkillGroup[] = [
   {
-    category: "Languages",
-    blurb: "Day-to-day for services, tooling, and AI pipelines.",
-    items: [
-      { name: "Go", icon: GoOriginal, description: "Primary language for event-driven microservices." },
-      { name: "Python", icon: PythonOriginal, description: "AI services, data pipelines, and tooling." },
-      { name: "TypeScript", icon: TypescriptOriginal, description: "Type-safe services and front-ends." },
-      { name: "JavaScript", icon: JavascriptOriginal, description: "The language of the web." },
-      { name: "Node.js", icon: NodejsOriginal, description: "Runtime for scalable server-side apps." },
-    ],
-  },
-  {
     category: "AI / LLM Platform",
     blurb: "The platform and operations layer around LLMs, built for reliability and cost, not demos.",
     items: [
       { name: "RAG", mono: "RAG", tint: "262 80% 66%", description: "Retrieval-Augmented Generation: chunking, hybrid search, reranking." },
       { name: "vLLM", mono: "vL", tint: "200 90% 60%", description: "High-throughput engine for self-hosted LLM inference." },
-      { name: "LangGraph", mono: "LG", tint: "150 60% 55%", description: "Stateful, multi-step tool-calling agents." },
       { name: "MCP", mono: "MCP", tint: "24 90% 60%", description: "Model Context Protocol: connects agents to tools and data." },
       { name: "Evals (RAGAS · Langfuse)", mono: "Ev", tint: "330 75% 65%", description: "Automated LLM evaluation and tracing, run as a CI quality gate." },
+      { name: "Langfuse", mono: "Lf", tint: "280 60% 62%", description: "LLM tracing and observability: prompts, latency, tokens, cost." },
       { name: "pgvector", mono: "pgv", tint: "204 70% 53%", description: "Vector similarity search inside PostgreSQL." },
       { name: "Qdrant", mono: "Qd", tint: "350 80% 62%", description: "Vector database for similarity search and retrieval." },
       { name: "Gemini", mono: "Gem", tint: "217 89% 61%", description: "Google's multimodal models, used alongside self-hosted inference." },
+      { name: "LangGraph", mono: "LG", tint: "150 60% 55%", description: "Stateful, multi-step tool-calling agents." },
       { name: "PyTorch", icon: PytorchOriginal, description: "Deep-learning framework underpinning model work." },
+    ],
+  },
+  {
+    category: "Languages",
+    blurb: "Day-to-day for AI services, platform code, and tooling.",
+    items: [
+      { name: "Python", icon: PythonOriginal, description: "AI services, FastAPI data layer, and ML ranking pipelines." },
+      { name: "Go", icon: GoOriginal, description: "Event-driven microservices and platform tooling." },
+      { name: "TypeScript", icon: TypescriptOriginal, description: "Type-safe services and front-ends." },
+      { name: "JavaScript", icon: JavascriptOriginal, description: "The language of the web." },
+      { name: "Node.js", icon: NodejsOriginal, description: "Runtime for scalable server-side apps." },
     ],
   },
   {

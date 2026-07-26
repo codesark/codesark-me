@@ -6,8 +6,8 @@ import AboutCard from "../about/AboutCard";
 
 const glance = [
   { icon: Briefcase, label: "Scale", value: "15+ Go microservices in prod · led 10+ engineers" },
-  { icon: Compass, label: "Focus", value: "RAG · vLLM inference · evals · agents" },
-  { icon: Rocket, label: "Currently", value: "Co-founder at Neosenth, building ViHi" },
+  { icon: Compass, label: "Focus", value: "RAG · vLLM · evals · agents over MCP" },
+  { icon: Rocket, label: "Recently", value: "Co-founded Neosenth, shipped ViHi" },
   { icon: MapPin, label: "Based in", value: "Bengaluru, India" },
   { icon: Award, label: "Recognition", value: "Work recognized by India's Finance Minister" },
   { icon: Sparkles, label: "Open to", value: "AI-platform · Platform / Backend · FDE roles" },

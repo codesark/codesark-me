@@ -19,35 +19,34 @@ const roles: Role[] = [
   {
     company: "Neosenth",
     role: "Technical Lead & Co-Founder",
-    dates: "2026 to Present",
-    current: true,
+    dates: "Jan 2026 to Jun 2026",
     impact:
-      "Shipped ViHi from zero to live on the App Store & Google Play: 15+ event-driven Go microservices plus an in-house RAG, inference, and agents stack.",
-    tech: ["Go", "Kubernetes", "RAG", "vLLM", "LangGraph"],
+      "Shipped ViHi from zero to live on the App Store & Google Play: built the AI layer end to end (RAG on pgvector, Gemini plus self-hosted vLLM, tool-calling agents over MCP, automated evals) on 15+ event-driven Go microservices. Mentored 5 interns.",
+    tech: ["RAG", "vLLM", "MCP", "Python", "Go", "Kubernetes"],
   },
   {
     company: "Lumen Technologies",
     role: "Senior Software Engineer (SDC-II)",
     dates: "2024 to 2026",
     impact:
-      "Delivered Colorless and Intent-Based Networking on the NaaS platform; built network-automation workflows with Temporal and Itential.",
-    tech: ["Go", "Temporal", "Itential", "NaaS"],
+      "Built an internal LLMOps assistant that analyzes production logs and suggests grounded fixes: RAG over company docs with evals and guardrails. Also delivered Colorless and Intent-Based Networking automation with Temporal and Itential.",
+    tech: ["RAG", "LLMOps", "TypeScript", "Temporal"],
   },
   {
     company: "Zeliot",
     role: "Senior Software Engineer (Team Lead)",
     dates: "2023 to 2024",
     impact:
-      "Led 10+ engineers building SML Saarthi (fleet analytics for SML ISUZU); shipped GenAI/RAG analytics answering at ~400ms.",
-    tech: ["Node.js", "Kafka", "GraphQL", "GenAI/RAG"],
+      "Led 10+ engineers building SML Saarthi (fleet analytics for SML ISUZU): AI and computer-vision vehicle tracking sustaining ~400ms latency, plus GenAI/RAG-powered analytics.",
+    tech: ["Computer Vision", "GenAI/RAG", "Node.js", "Kafka"],
   },
   {
     company: "S2T",
     role: "Software Engineer",
     dates: "2021 to 2023",
     impact:
-      "Cut service latency to sub-second across microservices powering AI investigation products (WEBINT/OSINT).",
-    tech: ["Go", "Microservices", "OSINT"],
+      "Owned on-prem Kubernetes and led the Docker Swarm to Kubernetes migration for AI investigation products (WEBINT/OSINT); cut service latency to sub-second.",
+    tech: ["Kubernetes", "AI Products", "Microservices"],
   },
   {
     company: "Career Capsule",

@@ -44,8 +44,8 @@ export default function Hero() {
             {siteData.tagline}
           </p>
           <p className="animate-fade-up [animation-delay:160ms] mt-3 max-w-xl text-sm text-gray-500 leading-relaxed font-mono">
-            RAG · self-hosted inference (vLLM) · automated evals · tool-calling
-            agents, running on Go, Kubernetes &amp; Terraform.
+            RAG · vLLM inference · evals · agents over MCP, in Python, on Go
+            &amp; Kubernetes platforms I build myself.
           </p>
 
           <div className="animate-fade-up [animation-delay:200ms] mt-5 flex items-center gap-2 text-sm text-gray-500">
@@ -90,7 +90,7 @@ export default function Hero() {
             <div className="terminal-card relative border border-slate-800 bg-black/30 p-2">
               <Image
                 src="/profile-pic.png"
-                alt="Portrait of Savinay Kumar, Senior Software Engineer & Technical Lead"
+                alt={`Portrait of ${siteData.name}, ${siteData.role}`}
                 width={300}
                 height={300}
                 priority
