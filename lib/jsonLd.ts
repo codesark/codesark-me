@@ -14,7 +14,7 @@ export function personSchema() {
     name: siteData.name,
     alternateName: siteData.handle,
     url: siteData.url,
-    image: `${siteData.url}${siteData.ogImage}`,
+    image: `${siteData.url}${siteData.profileImage}`,
     jobTitle: siteData.role,
     description: siteData.summary,
     email: `mailto:${siteData.email}`,
@@ -32,6 +32,13 @@ export function personSchema() {
     alumniOf: {
       "@type": "CollegeOrUniversity",
       name: "Indian Institute of Information Technology (IIIT) Una",
+    },
+    award: ["Work recognized by India's Finance Minister (Career Capsule)"],
+    hasOccupation: {
+      "@type": "Occupation",
+      name: siteData.role,
+      occupationLocation: { "@type": "City", name: "Bengaluru" },
+      skills: siteData.knowsAbout.join(", "),
     },
     knowsAbout: [...siteData.knowsAbout],
     sameAs: [

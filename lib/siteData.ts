@@ -13,7 +13,8 @@ export const siteData = {
     "Senior Software Engineer & Tech Lead building backend and AI platforms: RAG, self-hosted LLM inference, automated evals, and tool-calling agents on Go, Kubernetes, and Terraform.",
   availability: "Open to AI-platform, Platform / Backend & Forward-Deployed roles · Remote or relocation",
   resume: "/Savinay_Kumar_Resume.pdf",
-  ogImage: "/savinay-wall.jpg",
+  ogImage: "/og-home.jpg",
+  profileImage: "/profile-pic.png",
   worksFor: {
     name: "Neosenth",
     url: "https://neosenth.com",
