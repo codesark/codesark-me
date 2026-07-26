@@ -1,7 +1,4 @@
-"use client";
-
 import * as React from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, FileText, MapPin } from "lucide-react";
@@ -10,19 +7,9 @@ import TerminalTicker from "../hero/TerminalTicker";
 import ScrambleText from "../hero/ScrambleText";
 import { siteData } from "@/lib/siteData";
 
-const container: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.05 } },
-};
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
-};
-
+// Entrance animations are pure CSS (animate-fade-up + per-block delays), so the
+// hero is server-rendered and visible even before/without JS.
 export default function Hero() {
-  const reduce = useReducedMotion();
-
   return (
     <section
       id="hero"
@@ -34,26 +21,16 @@ export default function Hero() {
         className="pointer-events-none absolute -top-32 left-1/4 size-[28rem] rounded-full bg-primary/10 blur-3xl"
       />
       <div className="section-shell relative grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-center">
-        <motion.div
-          variants={container}
-          initial={reduce ? false : "hidden"}
-          animate="visible"
-        >
-          <motion.div
-            variants={item}
-            className="inline-flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-xs text-emerald-300"
-          >
+        <div>
+          <div className="animate-fade-up inline-flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-xs text-emerald-300">
             <span className="relative flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
             </span>
             {siteData.availability}
-          </motion.div>
+          </div>
 
-          <motion.h1
-            variants={item}
-            className="mt-6 font-display font-bold tracking-tight"
-          >
+          <h1 className="animate-fade-up [animation-delay:60ms] mt-6 font-display font-bold tracking-tight">
             <ScrambleText
               text={siteData.name}
               className="block text-4xl sm:text-5xl lg:text-6xl text-gray-50"
@@ -61,37 +38,25 @@ export default function Hero() {
             <span className="mt-2 block text-xl sm:text-2xl lg:text-3xl text-gray-400">
               {siteData.role}
             </span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            variants={item}
-            className="mt-5 max-w-xl text-lg text-gray-300 leading-relaxed"
-          >
+          <p className="animate-fade-up [animation-delay:120ms] mt-5 max-w-xl text-lg text-gray-300 leading-relaxed">
             {siteData.tagline}
-          </motion.p>
-          <motion.p
-            variants={item}
-            className="mt-3 max-w-xl text-sm text-gray-500 leading-relaxed font-mono"
-          >
+          </p>
+          <p className="animate-fade-up [animation-delay:160ms] mt-3 max-w-xl text-sm text-gray-500 leading-relaxed font-mono">
             RAG · self-hosted inference (vLLM) · automated evals · tool-calling
             agents, running on Go, Kubernetes &amp; Terraform.
-          </motion.p>
+          </p>
 
-          <motion.div
-            variants={item}
-            className="mt-5 flex items-center gap-2 text-sm text-gray-500"
-          >
+          <div className="animate-fade-up [animation-delay:200ms] mt-5 flex items-center gap-2 text-sm text-gray-500">
             <MapPin className="size-4 text-primary/80" aria-hidden />
             {siteData.location}
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={item}
-            className="mt-7 flex flex-wrap items-center gap-3"
-          >
+          <div className="animate-fade-up [animation-delay:240ms] mt-7 flex flex-wrap items-center gap-3">
             <Link
               href="/#projects"
-              className="inline-flex items-center gap-1.5 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center gap-1.5 bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               View my work
               <ArrowUpRight className="size-4" aria-hidden />
@@ -100,7 +65,7 @@ export default function Hero() {
               href={siteData.resume}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md border border-slate-700 px-5 py-2.5 text-sm text-gray-200 hover:border-primary/60 hover:text-primary transition-colors"
+              className="inline-flex items-center gap-1.5 border border-slate-700 px-5 py-2.5 text-sm text-gray-200 hover:border-primary/60 hover:text-primary transition-colors"
             >
               <FileText className="size-4" aria-hidden />
               Résumé
@@ -108,20 +73,15 @@ export default function Hero() {
             <div className="pl-1">
               <SocialIcons />
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div variants={item}>
+          <div className="animate-fade-up [animation-delay:280ms]">
             <TerminalTicker />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Portrait */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="order-first lg:order-none justify-self-center mb-2 lg:mb-0"
-        >
+        <div className="animate-fade-up [animation-delay:100ms] order-first lg:order-none justify-self-center mb-2 lg:mb-0">
           <div className="relative">
             <div
               aria-hidden
@@ -139,7 +99,7 @@ export default function Hero() {
               />
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <Link
