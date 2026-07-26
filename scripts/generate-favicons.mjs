@@ -13,12 +13,15 @@ const rootDir = path.join(__dirname, "..");
 const sourcePath = path.join(rootDir, "public", "sharky-sark.png");
 const outDir = path.join(rootDir, "public");
 
+// flatten: iOS ignores alpha in apple-touch icons (renders black) and rounds
+// corners, so those get an explicit brand background plus padding.
+const BRAND_BG = "#0a0a0b";
 const SIZES = [
   { name: "favicon-16x16.png", size: 16 },
   { name: "favicon-32x32.png", size: 32 },
-  { name: "apple-touch-icon.png", size: 180 },
-  { name: "android-chrome-192x192.png", size: 192 },
-  { name: "android-chrome-512x512.png", size: 512 },
+  { name: "apple-touch-icon.png", size: 180, flatten: true },
+  { name: "android-chrome-192x192.png", size: 192, flatten: true },
+  { name: "android-chrome-512x512.png", size: 512, flatten: true },
 ];
 
 async function main() {
@@ -29,13 +32,21 @@ async function main() {
 
   const image = sharp(sourcePath);
 
-  for (const { name, size } of SIZES) {
+  for (const { name, size, flatten } of SIZES) {
     const outPath = path.join(outDir, name);
-    await image
-      .clone()
-      .resize(size, size)
-      .png()
-      .toFile(outPath);
+    if (flatten) {
+      // ~83% content on a solid brand background so rounded corners don't clip.
+      const inner = Math.round(size * 0.83);
+      const shark = await image.clone().resize(inner, inner).png().toBuffer();
+      await sharp({
+        create: { width: size, height: size, channels: 4, background: BRAND_BG },
+      })
+        .composite([{ input: shark, gravity: "center" }])
+        .png()
+        .toFile(outPath);
+    } else {
+      await image.clone().resize(size, size).png().toFile(outPath);
+    }
     console.log("Written:", name);
   }
 
