@@ -38,15 +38,14 @@ export async function generateMetadata({
       url,
       siteName: siteData.name,
       publishedTime: post.date || undefined,
+      modifiedTime: post.updated || undefined,
       authors: [siteData.name],
-      images: [{ url: siteData.ogImage, width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
       card: "summary_large_image",
       creator: "@codesark",
       title: post.title,
       description: post.excerpt,
-      images: [siteData.ogImage],
     },
   };
 }
@@ -71,13 +70,13 @@ export default async function BlogPostPage({ params }: PageProps) {
           blogPostingSchema(post),
           breadcrumbSchema([
             { name: "Home", url: siteData.url },
-            { name: "Blog", url: `${siteData.url}/#blog` },
+            { name: "Blog", url: `${siteData.url}/blog` },
             { name: post.title, url: `${siteData.url}/blog/${post.slug}` },
           ]),
         ]}
       />
       <Link
-        href="/#blog"
+        href="/blog"
         className="text-gray-400 hover:text-primary mb-8 inline-flex items-center gap-1.5 text-sm transition"
       >
         <ArrowLeft className="size-4" aria-hidden />

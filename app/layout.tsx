@@ -24,9 +24,7 @@ const robotoMono = Roboto_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteData.url),
-  alternates: {
-    canonical: "/",
-  },
+  manifest: "/site.webmanifest",
   applicationName: `${siteData.name} | ${siteData.handle}`,
   authors: [{ name: siteData.name, url: siteData.url }],
   creator: siteData.name,

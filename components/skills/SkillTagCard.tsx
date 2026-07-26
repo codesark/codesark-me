@@ -30,6 +30,7 @@ export default function SkillTagCard() {
               >
                 <TechIcon tech={tech} size={18} />
                 {tech.name}
+                <span className="sr-only">: {tech.description}</span>
               </li>
             ))}
           </ul>

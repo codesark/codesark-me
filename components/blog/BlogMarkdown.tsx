@@ -171,6 +171,8 @@ export const blogMarkdownComponents: Components = {
       <img
         src={src}
         alt={alt ?? ""}
+        loading="lazy"
+        decoding="async"
         className="rounded-lg border border-slate-700 max-w-full h-auto"
         {...props}
       />

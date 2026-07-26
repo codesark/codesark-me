@@ -2,6 +2,9 @@ import Homepage from "./homepage";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata = {
+  alternates: {
+    canonical: "/",
+  },
   robots: {
     index: true,
     follow: true,

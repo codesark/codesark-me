@@ -8,6 +8,8 @@ export interface BlogPost {
   slug: string;
   title: string;
   date: string;
+  /** Optional `updated` frontmatter date; empty when the post was never revised */
+  updated: string;
   excerpt: string;
   content: string;
 }
@@ -29,6 +31,7 @@ export function getAllPosts(): BlogPost[] {
         slug,
         title: (data.title as string) ?? slug,
         date: (data.date as string) ?? "",
+        updated: (data.updated as string) ?? "",
         excerpt: (data.excerpt as string) ?? "",
         content,
       };
@@ -47,6 +50,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     slug,
     title: (data.title as string) ?? slug,
     date: (data.date as string) ?? "",
+    updated: (data.updated as string) ?? "",
     excerpt: (data.excerpt as string) ?? "",
     content,
   };

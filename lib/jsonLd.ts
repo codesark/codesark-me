@@ -80,11 +80,11 @@ export function blogPostingSchema(post: BlogPost) {
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date || undefined,
-    dateModified: post.date || undefined,
+    dateModified: post.updated || undefined,
     inLanguage: "en",
     url: postUrl,
     mainEntityOfPage: postUrl,
-    image: `${siteData.url}${siteData.ogImage}`,
+    image: `${postUrl}/opengraph-image`,
     author: { "@id": personId, "@type": "Person", name: siteData.name },
     publisher: { "@id": personId, "@type": "Person", name: siteData.name },
   };
