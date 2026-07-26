@@ -91,7 +91,7 @@ export function ContactCard() {
   });
 
   return (
-    <Card className="w-full">
+    <Card className="terminal-card w-full">
       <CardHeader>
         <CardTitle>Connect with me</CardTitle>
         <CardDescription>Let&lsquo;s get in touch.</CardDescription>

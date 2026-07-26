@@ -10,7 +10,7 @@ export default function SkillTagCard() {
       {skillGroups.map((group) => (
         <div
           key={group.category}
-          className="rounded-2xl border border-slate-800 bg-white/[0.02] p-5 hover:border-slate-700 transition-colors"
+          className="terminal-card rounded-2xl border border-slate-800 bg-white/[0.02] p-5 hover:border-slate-700 transition-colors"
         >
           <div className="mb-1.5 flex items-baseline justify-between gap-2">
             <h3 className="font-display text-base font-semibold text-gray-100">

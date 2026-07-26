@@ -28,7 +28,7 @@ export default function Footer() {
                 alt="Savinay Kumar"
                 width={32}
                 height={32}
-                className="size-8 rounded-full object-cover ring-1 ring-slate-700"
+                className="size-8 object-cover ring-1 ring-slate-700"
               />
               <span className="font-mono text-sm text-gray-200">codesark</span>
             </div>

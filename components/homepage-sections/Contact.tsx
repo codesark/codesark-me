@@ -31,7 +31,7 @@ export default function Contact() {
                 href={l.href}
                 target={l.href.startsWith("mailto:") ? undefined : "_blank"}
                 rel={l.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                className="flex items-center gap-4 rounded-xl border border-slate-800 bg-white/[0.02] p-4 hover:border-primary/40 hover:bg-white/[0.04] transition-colors"
+                className="terminal-card flex items-center gap-4 rounded-xl border border-slate-800 bg-white/[0.02] p-4 hover:border-primary/40 hover:bg-white/[0.04] transition-colors"
               >
                 <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
                   <l.icon className="size-5" aria-hidden />

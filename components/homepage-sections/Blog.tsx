@@ -28,7 +28,7 @@ export default function Blog({ posts }: IBlogProps) {
             <FadeInWhenVisible key={post.slug} delay={index * 0.08} className="h-full">
               <Link
                 href={`/blog/${post.slug}`}
-                className="group flex h-full flex-col rounded-2xl border border-slate-800 bg-white/[0.02] p-6 hover:border-primary/40 transition-colors"
+                className="terminal-card group flex h-full flex-col rounded-2xl border border-slate-800 bg-white/[0.02] p-6 hover:border-primary/40 transition-colors"
               >
                 <time
                   dateTime={post.date}

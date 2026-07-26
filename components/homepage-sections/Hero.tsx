@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ArrowDown, ArrowUpRight, FileText, MapPin } from "lucide-react";
 import SocialIcons from "../socials/SocialIcons";
 import TerminalTicker from "../hero/TerminalTicker";
+import ScrambleText from "../hero/ScrambleText";
 import { siteData } from "@/lib/siteData";
 
 const container: Variants = {
@@ -40,7 +41,7 @@ export default function Hero() {
         >
           <motion.div
             variants={item}
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-300"
+            className="inline-flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-xs text-emerald-300"
           >
             <span className="relative flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -53,9 +54,10 @@ export default function Hero() {
             variants={item}
             className="mt-6 font-display font-bold tracking-tight"
           >
-            <span className="block text-4xl sm:text-5xl lg:text-6xl text-gray-50">
-              {siteData.name}
-            </span>
+            <ScrambleText
+              text={siteData.name}
+              className="block text-4xl sm:text-5xl lg:text-6xl text-gray-50"
+            />
             <span className="mt-2 block text-xl sm:text-2xl lg:text-3xl text-gray-400">
               {siteData.role}
             </span>
@@ -123,9 +125,9 @@ export default function Hero() {
           <div className="relative">
             <div
               aria-hidden
-              className="absolute -inset-4 rounded-full bg-gradient-to-tr from-primary/30 to-transparent blur-2xl"
+              className="absolute -inset-4 bg-gradient-to-tr from-primary/25 to-transparent blur-2xl"
             />
-            <div className="relative rounded-full p-[3px] bg-gradient-to-tr from-primary/70 via-primary/20 to-transparent">
+            <div className="terminal-card relative border border-slate-800 bg-black/30 p-2">
               <Image
                 src="/profile-pic.png"
                 alt="Portrait of Savinay Kumar, Senior Software Engineer & Technical Lead"
@@ -133,7 +135,7 @@ export default function Hero() {
                 height={300}
                 priority
                 sizes="(min-width: 1024px) 300px, (min-width: 640px) 176px, 144px"
-                className="size-36 sm:size-44 lg:size-[300px] rounded-full bg-background object-cover"
+                className="size-36 sm:size-44 lg:size-[300px] bg-background object-cover"
               />
             </div>
           </div>

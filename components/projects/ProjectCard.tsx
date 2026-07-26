@@ -32,7 +32,7 @@ export default function ProjectCard(props: IProjectCardProps) {
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "tween", duration: 0.2 }}
-      className={`group relative flex h-full flex-col rounded-2xl border bg-white/[0.02] p-6 transition-colors ${
+      className={`terminal-card group relative flex h-full flex-col rounded-2xl border bg-white/[0.02] p-6 transition-colors ${
         highlighted
           ? "border-primary/40 hover:border-primary/70"
           : "border-slate-800 hover:border-slate-700"

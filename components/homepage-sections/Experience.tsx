@@ -124,7 +124,7 @@ export default function Experience() {
 
         {/* Education + résumé link */}
         <FadeInWhenVisible delay={0.1} className="lg:w-64">
-          <div className="rounded-2xl border border-slate-800 bg-white/[0.02] p-6">
+          <div className="terminal-card rounded-2xl border border-slate-800 bg-white/[0.02] p-6">
             <div className="flex items-center gap-2 text-gray-400">
               <GraduationCap className="size-4 text-primary" aria-hidden />
               <span className="text-xs uppercase tracking-wide">Education</span>

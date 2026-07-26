@@ -29,7 +29,7 @@ export default function About() {
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.1}>
-          <div className="rounded-2xl border border-slate-800 bg-white/[0.02] p-6">
+          <div className="terminal-card rounded-2xl border border-slate-800 bg-white/[0.02] p-6">
             <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-gray-400 mb-5">
               At a glance
             </h3>
