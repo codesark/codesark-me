@@ -24,11 +24,11 @@ export default function Footer() {
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
               <Image
-                src="/profile-pic.png"
-                alt="Savinay Kumar"
+                src="/sharky-sark.png"
+                alt="codesark shark mascot"
                 width={32}
                 height={32}
-                className="size-8 object-cover ring-1 ring-slate-700"
+                className="size-8 object-contain"
               />
               <span className="font-mono text-sm text-gray-200">codesark</span>
             </div>
