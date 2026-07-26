@@ -20,7 +20,7 @@ export default function Contact() {
       id="contact"
       eyebrow="Contact"
       title="Let's build something"
-      description={siteData.availability + ". The fastest way to reach me is below."}
+      description={siteData.availability + ". Email is fastest."}
     >
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
         <FadeInWhenVisible>
@@ -30,7 +30,7 @@ export default function Contact() {
                 key={l.label}
                 href={l.href}
                 target={l.href.startsWith("mailto:") ? undefined : "_blank"}
-                rel="noopener noreferrer"
+                rel={l.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                 className="flex items-center gap-4 rounded-xl border border-slate-800 bg-white/[0.02] p-4 hover:border-primary/40 hover:bg-white/[0.04] transition-colors"
               >
                 <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">

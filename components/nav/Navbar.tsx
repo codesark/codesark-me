@@ -97,7 +97,7 @@ export default function Navbar() {
             className="inline-flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-md border border-slate-700 text-gray-200 hover:border-primary/60 hover:text-primary transition-colors"
           >
             <FileText className="size-4" aria-hidden />
-            Resume
+            Résumé
           </a>
           <Link
             href="/#contact"
@@ -149,7 +149,7 @@ export default function Navbar() {
                   className="flex-1 inline-flex items-center justify-center gap-1.5 text-sm px-3.5 py-2.5 rounded-md border border-slate-700 text-gray-200"
                 >
                   <FileText className="size-4" aria-hidden />
-                  Resume
+                  Résumé
                 </a>
                 <Link
                   href="/#contact"

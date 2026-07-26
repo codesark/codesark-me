@@ -70,19 +70,20 @@ export function ContactCard() {
   const [isError, setIsError] = React.useState("");
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log("data", data);
     try {
       setIsLoading(true);
+      setIsError("");
       const result = await sendMailContactEmail({
         name: data.name,
         subject: data.subject,
         email: data.contact,
         message: data.message,
       });
-      console.log("result", result);
-    } catch (error) {
+      if (!result) {
+        setIsError("An error occured, please try again later.");
+      }
+    } catch {
       setIsError("An error occured, please try again later.");
-      console.log(error);
     } finally {
       setIsLoading(false);
       setIsDialogOpen(true);
@@ -125,7 +126,6 @@ export function ContactCard() {
               <Select
                 name="subject"
                 onValueChange={(value) => {
-                  console.log(value);
                   setValue("subject", value);
                 }}
               >

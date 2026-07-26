@@ -10,8 +10,6 @@ interface IContactForm {
   message: string;
 }
 
-const SEND_EMAIL_TO = "savinaykumar@outlook.com";
-
 export async function sendMailContactEmail(
   data: IContactForm
 ): Promise<boolean> {
@@ -27,7 +25,6 @@ export async function sendMailContactEmail(
         message: data.message
       }
     );
-    console.log("Contact form email sent:", mail);
     return true;
   } catch (error) {
     console.error("Error sending contact form email:", error);
