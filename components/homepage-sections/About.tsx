@@ -7,8 +7,8 @@ import FadeInWhenVisible from "../animation/FadeInWhenVisible";
 import AboutCard from "../about/AboutCard";
 
 const glance = [
-  { icon: Briefcase, label: "Role", value: "Senior Software Engineer & Technical Lead" },
-  { icon: Compass, label: "Focus", value: "AI platforms & event-driven backends" },
+  { icon: Briefcase, label: "Scale", value: "15+ Go microservices in prod · led 10+ engineers" },
+  { icon: Compass, label: "Focus", value: "RAG · vLLM inference · evals · agents" },
   { icon: Rocket, label: "Currently", value: "Co-founder at Neosenth, building ViHi" },
   { icon: MapPin, label: "Based in", value: "Bengaluru, India" },
   { icon: Award, label: "Recognition", value: "Work recognized by India's Finance Minister" },
@@ -33,7 +33,7 @@ export default function About() {
             <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-gray-400 mb-5">
               At a glance
             </h3>
-            <dl className="space-y-5">
+            <dl className="space-y-4">
               {glance.map((item) => (
                 <div key={item.label} className="flex gap-3.5">
                   <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">

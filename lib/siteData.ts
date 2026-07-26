@@ -19,6 +19,12 @@ export const siteData = {
     name: "Neosenth",
     url: "https://neosenth.com",
   },
+  // Hero terminal ticker: commands type out, outputs pop in whole.
+  terminal: [
+    { cmd: "whoami", out: "senior engineer & tech lead · 7+ yrs" },
+    { cmd: "kubectl get svc -n production", out: "15+ event-driven Go microservices", badge: "RUNNING" },
+    { cmd: "cat ~/focus", out: "RAG · vLLM · evals · agents" },
+  ],
   socials: {
     x: "https://x.com/codesark",
     linkedin: "https://www.linkedin.com/in/codesark",

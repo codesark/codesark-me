@@ -1,20 +1,27 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, FileText, MapPin } from "lucide-react";
 import SocialIcons from "../socials/SocialIcons";
+import TerminalTicker from "../hero/TerminalTicker";
 import { siteData } from "@/lib/siteData";
 
-const stats = [
-  { value: "5+ yrs", label: "Senior engineering" },
-  { value: "0→1", label: "Founder, shipped ViHi" },
-  { value: "Live", label: "On App Store & Play" },
-];
+const container: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05 } },
+};
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+};
 
 export default function Hero() {
+  const reduce = useReducedMotion();
+
   return (
     <section
       id="hero"
@@ -26,11 +33,13 @@ export default function Hero() {
         className="pointer-events-none absolute -top-32 left-1/4 size-[28rem] rounded-full bg-primary/10 blur-3xl"
       />
       <div className="section-shell relative grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-center">
-        <div>
+        <motion.div
+          variants={container}
+          initial={reduce ? false : "hidden"}
+          animate="visible"
+        >
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            variants={item}
             className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-300"
           >
             <span className="relative flex size-2">
@@ -41,9 +50,7 @@ export default function Hero() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 }}
+            variants={item}
             className="mt-6 font-display font-bold tracking-tight"
           >
             <span className="block text-4xl sm:text-5xl lg:text-6xl text-gray-50">
@@ -55,17 +62,13 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mt-6 max-w-xl text-lg text-gray-300 leading-relaxed"
+            variants={item}
+            className="mt-5 max-w-xl text-lg text-gray-300 leading-relaxed"
           >
             {siteData.tagline}
           </motion.p>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+            variants={item}
             className="mt-3 max-w-xl text-sm text-gray-500 leading-relaxed font-mono"
           >
             RAG · self-hosted inference (vLLM) · automated evals · tool-calling
@@ -73,9 +76,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            variants={item}
             className="mt-5 flex items-center gap-2 text-sm text-gray-500"
           >
             <MapPin className="size-4 text-primary/80" aria-hidden />
@@ -83,10 +84,8 @@ export default function Hero() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="mt-8 flex flex-wrap items-center gap-3"
+            variants={item}
+            className="mt-7 flex flex-wrap items-center gap-3"
           >
             <Link
               href="/#projects"
@@ -109,29 +108,16 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          <motion.dl
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-10 flex flex-wrap gap-x-10 gap-y-4 border-t border-slate-800 pt-6"
-          >
-            {stats.map((s) => (
-              <div key={s.label}>
-                <dt className="sr-only">{s.label}</dt>
-                <dd className="font-display text-2xl font-bold text-gray-50">
-                  {s.value}
-                </dd>
-                <dd className="text-xs text-gray-500 mt-0.5">{s.label}</dd>
-              </div>
-            ))}
-          </motion.dl>
-        </div>
+          <motion.div variants={item}>
+            <TerminalTicker />
+          </motion.div>
+        </motion.div>
 
         {/* Portrait */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
+          initial={reduce ? false : { opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
           className="order-first lg:order-none justify-self-center mb-2 lg:mb-0"
         >
           <div className="relative">
@@ -146,6 +132,7 @@ export default function Hero() {
                 width={300}
                 height={300}
                 priority
+                sizes="(min-width: 1024px) 300px, (min-width: 640px) 176px, 144px"
                 className="size-36 sm:size-44 lg:size-[300px] rounded-full bg-background object-cover"
               />
             </div>
