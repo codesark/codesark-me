@@ -1,5 +1,5 @@
 /**
- * Generates favicon and app icons from public/profile-pic.png (hero profile image).
+ * Generates favicon and app icons from public/sharky-sark.png (brand mascot).
  * Run: node scripts/generate-favicons.mjs
  */
 import fs from "fs";
@@ -10,7 +10,7 @@ import toIco from "to-ico";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, "..");
-const sourcePath = path.join(rootDir, "public", "profile-pic.png");
+const sourcePath = path.join(rootDir, "public", "sharky-sark.png");
 const outDir = path.join(rootDir, "public");
 
 const SIZES = [
@@ -45,7 +45,7 @@ async function main() {
   fs.writeFileSync(path.join(outDir, "favicon.ico"), icoBuffer);
   console.log("Written: favicon.ico");
 
-  console.log("Done. Favicons generated from profile-pic.png.");
+  console.log("Done. Favicons generated from sharky-sark.png.");
 }
 
 main().catch((err) => {

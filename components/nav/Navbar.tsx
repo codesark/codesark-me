@@ -61,11 +61,11 @@ export default function Navbar() {
           aria-label="Savinay Kumar home"
         >
           <Image
-            src="/profile-pic.png"
-            alt="Savinay Kumar"
+            src="/sharky-sark.png"
+            alt="codesark shark mascot"
             width={32}
             height={32}
-            className="size-8 object-cover ring-1 ring-slate-700 group-hover:ring-primary/60 transition"
+            className="size-8 object-contain group-hover:scale-110 transition-transform motion-reduce:transform-none"
           />
           <span className="font-mono text-sm text-gray-200 group-hover:text-primary transition-colors">
             codesark
