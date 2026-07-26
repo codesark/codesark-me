@@ -22,7 +22,7 @@ export const siteData = {
   // Hero terminal ticker: commands type out, outputs pop in whole.
   terminal: [
     { cmd: "whoami", out: "senior engineer & tech lead · 7+ yrs" },
-    { cmd: "kubectl get pods -n ai-platform", out: "RAG · inference · agents — in production", badge: "READY" },
+    { cmd: "kubectl get pods -n ai-platform", out: "RAG · inference · agents in production", badge: "READY" },
     { cmd: "cat ~/focus", out: "reliability & cost, not demos" },
   ],
   socials: {
